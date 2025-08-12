@@ -9,6 +9,7 @@ import docx
 import sys
 import os
 import numpy
+from PIL import Image, ImageTk
 
 # === Fonctions pour les documents Word ===
 def generate_convention(data_row):
@@ -114,31 +115,70 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Générateur de Documents de Formation")
-        self.minsize(400, 200)
+        self.title("Rev-20250812-01")
+        self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None
         self.df = None
 
-        # Widgets
-        tk.Button(self, text="Charger Fichier Excel", command=self.load_excel).pack(pady=10)
+        # Créer le layout principal avec deux frames
+        main_frame = tk.Frame(self)
+        main_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+        # Frame de gauche pour l'image
+        left_frame = tk.Frame(main_frame, width=200)
+        left_frame.pack(side="left", fill="y", padx=(0, 20))
+        left_frame.pack_propagate(False)  # Empêche le frame de se redimensionner
+
+        # Frame de droite pour les widgets
+        right_frame = tk.Frame(main_frame)
+        right_frame.pack(side="right", fill="both", expand=True)
+
+        # Ajouter l'image sur le côté gauche
+        try:
+            # Charger et redimensionner l'image
+            image_path = "LogoTMH.png"
+            if os.path.exists(image_path):
+                # Charger l'image PNG avec PIL et la redimensionner
+                pil_image = Image.open(image_path)
+                # Redimensionner l'image pour qu'elle tienne dans le frame (max 150px de large)
+                pil_image.thumbnail((150, 150), Image.Resampling.LANCZOS)
+                self.logo_image = ImageTk.PhotoImage(pil_image)
+                logo_label = tk.Label(left_frame, image=self.logo_image)
+                logo_label.pack(pady=20)
+            else:
+                # Fallback si l'image n'existe pas
+                logo_label = tk.Label(left_frame, text="Logo TMH", font=("Arial", 16, "bold"))
+                logo_label.pack(pady=20)
+        except Exception as e:
+            # En cas d'erreur, afficher un texte à la place
+            logo_label = tk.Label(left_frame, text="Logo TMH", font=("Arial", 16, "bold"))
+            logo_label.pack(pady=20)
+
+        # Widgets dans le frame de droite
+        # Titre de l'application
+        title_label = tk.Label(right_frame, text="Générateur de Documents de Formation", 
+                              font=("Arial", 14, "bold"), justify="center")
+        title_label.pack(pady=10)
         
-        tk.Label(self, text="Date (AAAA-MM-JJ):").pack()
-        self.date_entry = tk.Entry(self)
+        tk.Button(right_frame, text="Charger Fichier Excel", command=self.load_excel).pack(pady=10)
+        
+        tk.Label(right_frame, text="Date (AAAA-MM-JJ):").pack()
+        self.date_entry = tk.Entry(right_frame)
         self.date_entry.pack()
 
-        tk.Label(self, text="Type de Formation:").pack()
-        self.formation_entry = tk.Entry(self)
+        tk.Label(right_frame, text="Type de Formation:").pack()
+        self.formation_entry = tk.Entry(right_frame)
         self.formation_entry.pack()
 
         # Remettre le bouton d'export Excel
-        tk.Button(self, text="Filtrer et Exporter Excel", command=self.filter_and_export_excel).pack(pady=10)
+        tk.Button(right_frame, text="Filtrer et Exporter Excel", command=self.filter_and_export_excel).pack(pady=10)
         
-        tk.Button(self, text="Afficher Toutes les Données", command=self.show_all_data).pack(pady=5)
+        tk.Button(right_frame, text="Afficher Toutes les Données", command=self.show_all_data).pack(pady=5)
         
-        tk.Button(self, text="Ouvrir feuille d'emargement", command=self.open_word_file).pack(pady=10)
+        tk.Button(right_frame, text="Ouvrir feuille d'emargement", command=self.open_word_file).pack(pady=10)
 
-        tk.Button(self, text="Ouvrir convention", command=self.open_convention_file).pack(pady=10)
+        tk.Button(right_frame, text="Ouvrir convention", command=self.open_convention_file).pack(pady=10)
 
     def show_all_data(self):
         """Affiche toutes les données du fichier Excel"""
