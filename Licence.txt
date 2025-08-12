@@ -1,0 +1,27 @@
+LICENCE D’UTILISATION DU LOGICIEL
+
+Ce logiciel est la propriété exclusive de Toyota Material Handling. Son utilisation est strictement réservée aux collaborateurs autorisés de l’entreprise dans le cadre de leurs fonctions professionnelles.
+
+1. Objet de la licence
+La présente licence permet à l’utilisateur d’exécuter le logiciel sur les équipements informatiques fournis ou validés par Toyota Material Handling. Toute utilisation en dehors du cadre professionnel est interdite.
+
+2. Conditions d’utilisation
+L’utilisateur s’engage à ne pas copier, modifier, distribuer ou transférer le logiciel à des tiers.
+Toute tentative de décompilation, désassemblage ou ingénierie inverse est strictement interdite.
+L’accès au logiciel est personnel et ne peut être partagé avec des personnes non autorisées.
+3. Développement et gestion
+Ce logiciel a été développé par Christophe DESANDIEGO. En tant que développeur, il est le seul habilité à déterminer :
+
+Les utilisateurs autorisés à accéder au logiciel.
+La durée de vie et les mises à jour de l’application. Toute demande d’accès ou d’évolution du logiciel doit être adressée directement à lui.
+4. Confidentialité
+Le logiciel peut contenir des informations confidentielles relatives aux activités, aux clients ou aux technologies de Toyota Material Handling. L’utilisateur s’engage à préserver la confidentialité de ces informations.
+
+5. Responsabilité
+Toyota Material Handling ne pourra être tenue responsable des dommages directs ou indirects résultant d’une utilisation non conforme du logiciel.
+
+6. Durée
+Cette licence est valable tant que l’utilisateur est employé par Toyota Material Handling et que le logiciel est utilisé conformément aux présentes conditions.
+
+7. Résiliation
+En cas de non-respect des conditions de cette licence, Toyota Material Handling ou le développeur se réservent le droit de retirer l’accès au logiciel sans préavis.
