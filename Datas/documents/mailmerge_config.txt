@@ -1,0 +1,20 @@
+Fichier Excel pour publipostage: Datas\documents\source_publipostage.xlsx
+Nombre de lignes: 28
+Colonnes disponibles:
+- userid
+- courseid
+- category
+- prenom
+- nom
+- email
+- institution
+- course full name
+- course short name
+- code cpne
+- facetofaceid
+- facetofacename
+- facetofacecapacite
+- facetofacesessionid
+- datedebutsession
+- datefinsession
+- duration_in_hours

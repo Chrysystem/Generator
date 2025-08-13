@@ -21,30 +21,217 @@ def generate_convention(data_row):
     doc.save('Convention_Stage.docx')
 
 
+def generate_emargement_from_excel(excel_file_path):
+    """Génère la feuille d'émargement en utilisant le fichier Excel filtré"""
+    try:
+        # Charger les données du fichier Excel filtré
+        df = pd.read_excel(excel_file_path)
+        
+        doc = Document()
+        doc.add_heading('Feuille d\'Emargement', 0)
+        table = doc.add_table(rows=1, cols=4)
+        hdr_cells = table.rows[0].cells
+        hdr_cells[0].text = 'Nom'
+        hdr_cells[1].text = 'Formation'
+        hdr_cells[2].text = 'Date'
+        hdr_cells[3].text = 'Signature'
+
+        for index, row in df.iterrows():
+            row_cells = table.add_row().cells
+            # Utiliser les colonnes du fichier Excel filtré
+            nom = row.get('firstname', '') + ' ' + row.get('lastname', '') if 'firstname' in row and 'lastname' in row else str(row.get('Nom', 'Nom inconnu'))
+            formation = row.get('course full name', 'Formation inconnue')
+            date = row.get('datedebutsession', 'Date inconnue')
+            
+            row_cells[0].text = str(nom)
+            row_cells[1].text = str(formation)
+            row_cells[2].text = str(date)
+            row_cells[3].text = ''
+
+        doc.save('Feuille_Emargement.docx')
+        return True
+        
+    except Exception as e:
+        print(f"Erreur lors de la génération de la feuille d'émargement: {str(e)}")
+        return False
+
+
 def generate_emargement(filtered_data):
-    doc = Document()
-    doc.add_heading('Feuille d\'Emargement', 0)
-    table = doc.add_table(rows=1, cols=3)
-    hdr_cells = table.rows[0].cells
-    hdr_cells[0].text = 'Nom'
-    hdr_cells[1].text = 'Formation'
-    hdr_cells[2].text = 'Signature'
+    """Ancienne fonction - maintenant dépréciée, utilise generate_emargement_from_excel"""
+    # Créer un fichier Excel temporaire avec les données filtrées
+    temp_excel_path = "temp_filtered_data_emargement.xlsx"
+    filtered_data.to_excel(temp_excel_path, index=False)
+    
+    # Utiliser la nouvelle fonction
+    success = generate_emargement_from_excel(temp_excel_path)
+    
+    # Nettoyer le fichier temporaire
+    try:
+        os.remove(temp_excel_path)
+    except:
+        pass
+    
+    return success
 
-    for index, row in filtered_data.iterrows():
-        row_cells = table.add_row().cells
-        row_cells[0].text = str(row['Nom'])
-        row_cells[1].text = str(row['Formation'])
-        row_cells[2].text = ''
 
-    doc.save('Feuille_Emargement.docx')
+def generate_chevalets_from_excel(excel_file_path):
+    """Génère les chevalets en utilisant le fichier Excel filtré pour le publipostage"""
+    try:
+        # Charger les données du fichier Excel filtré
+        df = pd.read_excel(excel_file_path)
+        
+        # Chemin vers le template de chevalet
+        template_path = os.path.join("Datas", "documents", "template_chevalet.docx")
+        
+        # Vérifier si le template existe
+        if not os.path.exists(template_path):
+            # Créer un template par défaut si il n'existe pas
+            create_default_chevalet_template(template_path)
+        
+        # Créer un document Word pour le publipostage
+        doc = Document(template_path)
+        
+        # Générer un chevalet pour chaque ligne du fichier Excel
+        for index, row in df.iterrows():
+            try:
+                # Créer une copie du template pour chaque personne
+                doc_copy = Document(template_path)
+                
+                # Utiliser les colonnes du fichier Excel filtré
+                nom = row.get('firstname', '') + ' ' + row.get('lastname', '') if 'firstname' in row and 'lastname' in row else str(row.get('Nom', 'Nom inconnu'))
+                formation = row.get('course full name', 'Formation inconnue')
+                date = row.get('datedebutsession', 'Date inconnue')
+                
+                # Remplacer les placeholders dans le template
+                replace_placeholders_in_document(doc_copy, {
+                    '{{NOM}}': nom,
+                    '{{FORMATION}}': formation,
+                    '{{DATE}}': str(date),
+                    '{{PRENOM}}': row.get('firstname', ''),
+                    '{{NOM_FAMILLE}}': row.get('lastname', '')
+                })
+                
+                # Nettoyer le nom pour le nom de fichier (enlever les caractères spéciaux)
+                nom_fichier = "".join(c for c in nom if c.isalnum() or c in (' ', '-', '_')).rstrip()
+                doc_copy.save(f"Chevalet_{nom_fichier}.docx")
+                
+            except Exception as e:
+                print(f"Erreur lors de la génération du chevalet pour {nom}: {str(e)}")
+                # En cas d'erreur, créer un chevalet simple
+                create_simple_chevalet(nom, formation, date)
+                
+        return True
+        
+    except Exception as e:
+        print(f"Erreur lors de la lecture du fichier Excel: {str(e)}")
+        return False
 
 
 def generate_chevalets(filtered_data):
-    for index, row in filtered_data.iterrows():
-        doc = Document()
-        doc.add_heading(f"Chevalet: {row['Nom']}", 0)
-        doc.add_paragraph(f"Formation: {row['Formation']}")
-        doc.save(f"Chevalet_{row['Nom']}.docx")
+    """Ancienne fonction - maintenant dépréciée, utilise generate_chevalets_from_excel"""
+    # Créer un fichier Excel temporaire avec les données filtrées
+    temp_excel_path = "temp_filtered_data.xlsx"
+    filtered_data.to_excel(temp_excel_path, index=False)
+    
+    # Utiliser la nouvelle fonction
+    success = generate_chevalets_from_excel(temp_excel_path)
+    
+    # Nettoyer le fichier temporaire
+    try:
+        os.remove(temp_excel_path)
+    except:
+        pass
+    
+    return success
+
+
+def create_default_chevalet_template(template_path):
+    """Crée un template de chevalet par défaut"""
+    doc = Document()
+    
+    # Titre
+    title = doc.add_heading('Chevalet de Formation', 0)
+    title.alignment = 1  # Centré
+    
+    # Logo ou espace pour logo
+    doc.add_paragraph()
+    logo_para = doc.add_paragraph("LOGO TMH")
+    logo_para.alignment = 1  # Centré
+    
+    doc.add_paragraph()
+    
+    # Informations du participant
+    doc.add_heading('Informations du Participant', level=1)
+    
+    # Tableau pour les informations
+    table = doc.add_table(rows=3, cols=2)
+    table.style = 'Table Grid'
+    
+    # Nom
+    table.cell(0, 0).text = "Nom complet:"
+    table.cell(0, 1).text = "{{NOM}}"
+    
+    # Prénom
+    table.cell(1, 0).text = "Prénom:"
+    table.cell(1, 1).text = "{{PRENOM}}"
+    
+    # Nom de famille
+    table.cell(2, 0).text = "Nom de famille:"
+    table.cell(2, 1).text = "{{NOM_FAMILLE}}"
+    
+    doc.add_paragraph()
+    
+    # Informations de formation
+    doc.add_heading('Informations de Formation', level=1)
+    
+    # Tableau pour la formation
+    formation_table = doc.add_table(rows=2, cols=2)
+    formation_table.style = 'Table Grid'
+    
+    # Formation
+    formation_table.cell(0, 0).text = "Formation:"
+    formation_table.cell(0, 1).text = "{{FORMATION}}"
+    
+    # Date
+    formation_table.cell(1, 0).text = "Date:"
+    formation_table.cell(1, 1).text = "{{DATE}}"
+    
+    doc.add_paragraph()
+    
+    # Espace pour signature
+    doc.add_paragraph("Signature du participant:")
+    doc.add_paragraph("_" * 50)
+    
+    # Sauvegarder le template
+    os.makedirs(os.path.dirname(template_path), exist_ok=True)
+    doc.save(template_path)
+
+
+def replace_placeholders_in_document(doc, replacements):
+    """Remplace les placeholders dans le document Word"""
+    for paragraph in doc.paragraphs:
+        for old_text, new_text in replacements.items():
+            if old_text in paragraph.text:
+                paragraph.text = paragraph.text.replace(old_text, new_text)
+    
+    # Remplacer aussi dans les tableaux
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                for old_text, new_text in replacements.items():
+                    if old_text in cell.text:
+                        cell.text = cell.text.replace(old_text, new_text)
+
+
+def create_simple_chevalet(nom, formation, date):
+    """Crée un chevalet simple en cas d'erreur avec le template"""
+    doc = Document()
+    doc.add_heading(f"Chevalet: {nom}", 0)
+    doc.add_paragraph(f"Formation: {formation}")
+    doc.add_paragraph(f"Date: {date}")
+    
+    nom_fichier = "".join(c for c in nom if c.isalnum() or c in (' ', '-', '_')).rstrip()
+    doc.save(f"Chevalet_{nom_fichier}.docx")
 
 
 def export_filtered_excel(filtered_data, formation_name="", date_filter=""):
@@ -104,10 +291,43 @@ class Application(tk.Tk):
         if save_path:
             try:
                 filtered_df.to_excel(save_path, index=False)
-                messagebox.showinfo("Succès", f"Fichier Excel exporté avec succès!\n{len(filtered_df)} lignes exportées.\n\nVous pouvez maintenant utiliser ce fichier pour le publipostage dans Word.")
+                
+                # Proposer d'utiliser ce fichier pour le publipostage
+                response = messagebox.askyesno("Publipostage", 
+                    f"Fichier Excel exporté avec succès!\n{len(filtered_df)} lignes exportées.\n\n"
+                    f"Voulez-vous utiliser ce fichier pour le publipostage Word?\n\n"
+                    f"Si oui, le fichier sera copié vers l'emplacement standard pour faciliter le publipostage.")
+                
+                if response:
+                    # Copier le fichier vers l'emplacement standard
+                    excel_dest = os.path.join("Datas", "documents", "source_publipostage.xlsx")
+                    os.makedirs(os.path.dirname(excel_dest), exist_ok=True)
+                    import shutil
+                    shutil.copy2(save_path, excel_dest)
+                    
+                    # Créer un fichier de configuration
+                    config_path = os.path.join("Datas", "documents", "mailmerge_config.txt")
+                    colonnes = list(filtered_df.columns)
+                    
+                    with open(config_path, 'w', encoding='utf-8') as f:
+                        f.write(f"Fichier Excel pour publipostage: {excel_dest}\n")
+                        f.write(f"Nombre de lignes: {len(filtered_df)}\n")
+                        f.write(f"Colonnes disponibles:\n")
+                        for col in colonnes:
+                            f.write(f"- {col}\n")
+                    
+                    messagebox.showinfo("Publipostage configuré", 
+                        f"Fichier configuré pour le publipostage!\n\n"
+                        f"Fichier copié vers: {excel_dest}\n\n"
+                        f"Pour utiliser dans Word:\n"
+                        f"1. Ouvrir Word\n"
+                        f"2. Publipostage > Sélectionner les destinataires > Utiliser une liste existante\n"
+                        f"3. Sélectionner: {excel_dest}\n\n"
+                        f"Colonnes disponibles: {', '.join(colonnes[:5])}{'...' if len(colonnes) > 5 else ''}")
+                else:
+                    messagebox.showinfo("Succès", f"Fichier Excel exporté avec succès!\n{len(filtered_df)} lignes exportées.\n\nVous pouvez maintenant utiliser ce fichier pour le publipostage dans Word.")
                 
                 # Ouvrir le dossier contenant le fichier
-                import os
                 os.startfile(os.path.dirname(save_path))
             except Exception as e:
                 messagebox.showerror("Erreur", f"Erreur lors de l'export: {str(e)}")
@@ -174,55 +394,108 @@ class Application(tk.Tk):
         # Remettre le bouton d'export Excel
         tk.Button(right_frame, text="Filtrer et Exporter Excel", command=self.filter_and_export_excel).pack(pady=10)
         
-        tk.Button(right_frame, text="Afficher Toutes les Données", command=self.show_all_data).pack(pady=5)
+        tk.Button(right_frame, text="Ouvrir le chevalet", command=self.open_chevalet).pack(pady=5)
+        
+        tk.Button(right_frame, text="Sélectionner template chevalet", command=self.select_chevalet_template).pack(pady=5)
+        
+        tk.Button(right_frame, text="Sélectionner fichier Excel pour publipostage", command=self.select_excel_for_mailmerge).pack(pady=5)
         
         tk.Button(right_frame, text="Ouvrir feuille d'emargement", command=self.open_word_file).pack(pady=10)
 
         tk.Button(right_frame, text="Ouvrir convention", command=self.open_convention_file).pack(pady=10)
 
-    def show_all_data(self):
-        """Affiche toutes les données du fichier Excel"""
-        if self.df is None:
-            messagebox.showerror("Erreur", "Veuillez d'abord charger un fichier Excel.")
-            return
+    def open_chevalet(self):
+        """Ouvre le template Word de chevalet pour le publipostage"""
+        # Chemin vers le template de chevalet
+        template_path = os.path.join("Datas", "documents", "template_chevalet.docx")
         
-        # Créer une fenêtre pour afficher les données
-        data_window = tk.Toplevel(self)
-        data_window.title("Toutes les Données")
-        data_window.geometry("800x600")
+        # Vérifier si le template existe
+        if not os.path.exists(template_path):
+            # Créer un template par défaut si il n'existe pas
+            create_default_chevalet_template(template_path)
+            messagebox.showinfo("Info", "Template de chevalet par défaut créé.")
         
-        # Créer un widget Text pour afficher les données
-        text_widget = tk.Text(data_window, wrap=tk.WORD)
-        scrollbar = tk.Scrollbar(data_window, orient="vertical", command=text_widget.yview)
-        text_widget.configure(yscrollcommand=scrollbar.set)
-        
-        text_widget.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
-        
-        # Afficher les données
-        text_widget.insert(tk.END, f"Total des lignes: {len(self.df)}\n\n")
-        text_widget.insert(tk.END, f"Colonnes: {list(self.df.columns)}\n\n")
-        
-        # Afficher les premières 20 lignes
-        text_widget.insert(tk.END, "Premières 20 lignes:\n")
-        text_widget.insert(tk.END, str(self.df.head(20)))
-        
-        # Afficher les valeurs uniques pour les colonnes importantes
-        if 'datedebutsession' in self.df.columns:
-            dates = self.df['datedebutsession'].dropna().unique()
-            text_widget.insert(tk.END, f"\n\nDates uniques ({len(dates)}):\n")
-            for date in dates[:10]:  # Afficher les 10 premières
-                text_widget.insert(tk.END, f"- {date}\n")
-            if len(dates) > 10:
-                text_widget.insert(tk.END, f"... et {len(dates) - 10} autres\n")
-        
-        if 'course full name' in self.df.columns:
-            formations = self.df['course full name'].dropna().unique()
-            text_widget.insert(tk.END, f"\nFormations uniques ({len(formations)}):\n")
-            for formation in formations[:10]:  # Afficher les 10 premières
-                text_widget.insert(tk.END, f"- {formation}\n")
-            if len(formations) > 10:
-                text_widget.insert(tk.END, f"... et {len(formations) - 10} autres\n")
+        try:
+            # Ouvrir le template Word avec l'application par défaut
+            os.startfile(template_path)
+            messagebox.showinfo("Succès", 
+                f"Template de chevalet ouvert!\n\n"
+                f"Chemin: {template_path}\n\n"
+                f"Vous pouvez maintenant utiliser ce template pour le publipostage dans Word.\n\n"
+                f"Placeholders disponibles:\n"
+                f"- {{nom}} : Nom complet\n"
+                f"- {{prenom}} : Prénom\n"
+                f"- {{nom}} : Nom de famille\n"
+                f"- {{course full name}} : Nom de la formation\n"
+                f"- {{datedebutsession}} : Date de la session")
+                
+        except Exception as e:
+            messagebox.showerror("Erreur", f"Erreur lors de l'ouverture du template: {str(e)}")
+
+    def select_chevalet_template(self):
+        """Permet à l'utilisateur de sélectionner un template personnalisé pour les chevalets"""
+        file_path = filedialog.askopenfilename(
+            filetypes=[("Word Files", "*.docx")],
+            title="Sélectionner un template de chevalet"
+        )
+        if file_path:
+            # Copier le template sélectionné vers le dossier Datas/documents
+            template_dest = os.path.join("Datas", "documents", "template_chevalet.docx")
+            os.makedirs(os.path.dirname(template_dest), exist_ok=True)
+            
+            try:
+                import shutil
+                shutil.copy2(file_path, template_dest)
+                messagebox.showinfo("Succès", f"Template de chevalet mis à jour!\n\nLe template a été copié vers: {template_dest}\n\nVous pouvez maintenant utiliser le bouton 'Ouvrir le chevalet' pour générer les chevalets avec ce nouveau template.")
+            except Exception as e:
+                messagebox.showerror("Erreur", f"Erreur lors de la copie du template: {str(e)}")
+
+    def select_excel_for_mailmerge(self):
+        """Permet de sélectionner un fichier Excel pour le publipostage Word"""
+        file_path = filedialog.askopenfilename(
+            filetypes=[("Excel Files", "*.xlsx")],
+            title="Sélectionner le fichier Excel pour le publipostage"
+        )
+        if file_path:
+            try:
+                # Charger le fichier Excel sélectionné pour vérifier sa structure
+                df = pd.read_excel(file_path)
+                
+                # Afficher les informations sur le fichier sélectionné
+                colonnes = list(df.columns)
+                nb_lignes = len(df)
+                
+                # Créer un fichier de configuration pour le publipostage
+                config_path = os.path.join("Datas", "documents", "mailmerge_config.txt")
+                os.makedirs(os.path.dirname(config_path), exist_ok=True)
+                
+                with open(config_path, 'w', encoding='utf-8') as f:
+                    f.write(f"Fichier Excel sélectionné: {file_path}\n")
+                    f.write(f"Nombre de lignes: {nb_lignes}\n")
+                    f.write(f"Colonnes disponibles:\n")
+                    for col in colonnes:
+                        f.write(f"- {col}\n")
+                
+                # Copier le fichier Excel vers un emplacement standard
+                excel_dest = os.path.join("Datas", "documents", "source_publipostage.xlsx")
+                import shutil
+                shutil.copy2(file_path, excel_dest)
+                
+                messagebox.showinfo("Succès", 
+                    f"Fichier Excel sélectionné pour le publipostage!\n\n"
+                    f"Fichier: {os.path.basename(file_path)}\n"
+                    f"Lignes: {nb_lignes}\n"
+                    f"Colonnes: {len(colonnes)}\n\n"
+                    f"Le fichier a été copié vers: {excel_dest}\n\n"
+                    f"Vous pouvez maintenant:\n"
+                    f"1. Ouvrir Word\n"
+                    f"2. Aller dans 'Publipostage' > 'Sélectionner les destinataires' > 'Utiliser une liste existante'\n"
+                    f"3. Sélectionner le fichier: {excel_dest}\n\n"
+                    f"Colonnes disponibles pour le publipostage:\n"
+                    f"{', '.join(colonnes[:5])}{'...' if len(colonnes) > 5 else ''}")
+                    
+            except Exception as e:
+                messagebox.showerror("Erreur", f"Erreur lors de la sélection du fichier Excel: {str(e)}")
 
     def load_excel(self):
         self.file_path = filedialog.askopenfilename(filetypes=[("Excel Files", "*.xlsx")])
@@ -293,8 +566,10 @@ class Application(tk.Tk):
             
         return filtered_df
 
+
+
     def filter_and_generate(self):
-        """Filtre les données et génère les documents Word"""
+        """Filtre les données et génère les documents Word (ancienne méthode)"""
         filtered_df = self.filter_data()
         if filtered_df is None:
             return

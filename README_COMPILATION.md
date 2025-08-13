@@ -81,3 +81,4 @@ Si vous rencontrez des problèmes :
 1. Vérifiez que Python est bien installé : `python --version`
 2. Vérifiez que pip fonctionne : `pip --version`
 3. Essayez de réinstaller les dépendances : `pip install --upgrade -r requirements.txt`
+
