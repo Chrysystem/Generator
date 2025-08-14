@@ -513,13 +513,13 @@ class Application(tk.Tk):
             messagebox.showinfo("Succès", 
                 f"Template de chevalet ouvert!\n\n"
                 f"Chemin: {template_path}\n\n"
-                f"Vous pouvez maintenant utiliser ce template pour le publipostage dans Word.\n\n"
-                f"Placeholders disponibles:\n"
-                f"- {{nom}} : Nom complet\n"
-                f"- {{prenom}} : Prénom\n"
-                f"- {{nom}} : Nom de famille\n"
-                f"- {{course full name}} : Nom de la formation\n"
-                f"- {{datedebutsession}} : Date de la session")
+                f"Vous pouvez maintenant utiliser ce template pour le publipostage dans Word.\n\n")
+                #f"Placeholders disponibles:\n"
+                #f"- {{nom}} : Nom complet\n"
+                #f"- {{prenom}} : Prénom\n"
+                #f"- {{nom}} : Nom de famille\n"
+                #f"- {{course full name}} : Nom de la formation\n"
+                #f"- {{datedebutsession}} : Date de la session")
                 
         except Exception as e:
             messagebox.showerror("Erreur", f"Erreur lors de l'ouverture du template: {str(e)}")
