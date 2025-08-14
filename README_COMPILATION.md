@@ -82,3 +82,4 @@ Si vous rencontrez des problèmes :
 2. Vérifiez que pip fonctionne : `pip --version`
 3. Essayez de réinstaller les dépendances : `pip install --upgrade -r requirements.txt`
 
+

@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, ttk
 import pandas as pd
 from docx import Document
 import os
@@ -270,7 +270,8 @@ class Application(tk.Tk):
             os.startfile(file_path)
     def open_word_file(self):
         """Ouvre un fichier Word avec l'application par défaut"""
-        file_path = filedialog.askopenfilename(filetypes=[("Word Files", "*.docx")], title="Ouvrir un fichier Word")
+        #file_path = filedialog.askopenfilename(filetypes=[("Word Files", "*.docx")], title="Ouvrir un fichier Word")
+        file_path = os.path.join("Datas", "documents", "Feuille_Emargement.docx")
         if file_path:
             import os
             os.startfile(file_path)
@@ -282,55 +283,55 @@ class Application(tk.Tk):
             return
 
         # Demander où sauvegarder le fichier
-        save_path = filedialog.asksaveasfilename(
-            defaultextension=".xlsx",
-            filetypes=[("Excel Files", "*.xlsx")],
-            title="Sauvegarder le fichier Excel filtré"
-        )
+        save_path = os.path.join("Datas", "Log", "Log_export.xlsx")
+        #save_path = filedialog.asksaveasfilename(
+         #   defaultextension=".xlsx",
+        #    filetypes=[("Excel Files", "*.xlsx")],
+        #    title="Sauvegarder le fichier Excel filtré"
+        #)
         
-        if save_path:
-            try:
-                filtered_df.to_excel(save_path, index=False)
+        #if save_path:
+        try:
+            filtered_df.to_excel(save_path, index=False)
+            
+            # Proposer d'utiliser ce fichier pour le publipostage
+            messagebox.askyesno("Publipostage",f"Fichier Excel exporté avec succès!\n{len(filtered_df)} lignes exportées.\n\n")
+                #f"Voulez-vous utiliser ce fichier pour le publipostage Word?\n\n"
+                #f"Si oui, le fichier sera copié vers l'emplacement standard pour faciliter le publipostage.")
+            
+            #if response:
+                # Copier le fichier vers l'emplacement standard
+            excel_dest = os.path.join("Datas", "documents", "source_publipostage.xlsx")
+            os.makedirs(os.path.dirname(excel_dest), exist_ok=True)
+            import shutil
+            shutil.copy2(save_path, excel_dest)
                 
-                # Proposer d'utiliser ce fichier pour le publipostage
-                response = messagebox.askyesno("Publipostage", 
-                    f"Fichier Excel exporté avec succès!\n{len(filtered_df)} lignes exportées.\n\n"
-                    f"Voulez-vous utiliser ce fichier pour le publipostage Word?\n\n"
-                    f"Si oui, le fichier sera copié vers l'emplacement standard pour faciliter le publipostage.")
-                
-                if response:
-                    # Copier le fichier vers l'emplacement standard
-                    excel_dest = os.path.join("Datas", "documents", "source_publipostage.xlsx")
-                    os.makedirs(os.path.dirname(excel_dest), exist_ok=True)
-                    import shutil
-                    shutil.copy2(save_path, excel_dest)
-                    
-                    # Créer un fichier de configuration
-                    config_path = os.path.join("Datas", "documents", "mailmerge_config.txt")
-                    colonnes = list(filtered_df.columns)
-                    
-                    with open(config_path, 'w', encoding='utf-8') as f:
-                        f.write(f"Fichier Excel pour publipostage: {excel_dest}\n")
-                        f.write(f"Nombre de lignes: {len(filtered_df)}\n")
-                        f.write(f"Colonnes disponibles:\n")
-                        for col in colonnes:
-                            f.write(f"- {col}\n")
-                    
-                    messagebox.showinfo("Publipostage configuré", 
-                        f"Fichier configuré pour le publipostage!\n\n"
-                        f"Fichier copié vers: {excel_dest}\n\n"
-                        f"Pour utiliser dans Word:\n"
-                        f"1. Ouvrir Word\n"
-                        f"2. Publipostage > Sélectionner les destinataires > Utiliser une liste existante\n"
-                        f"3. Sélectionner: {excel_dest}\n\n"
-                        f"Colonnes disponibles: {', '.join(colonnes[:5])}{'...' if len(colonnes) > 5 else ''}")
-                else:
-                    messagebox.showinfo("Succès", f"Fichier Excel exporté avec succès!\n{len(filtered_df)} lignes exportées.\n\nVous pouvez maintenant utiliser ce fichier pour le publipostage dans Word.")
-                
-                # Ouvrir le dossier contenant le fichier
-                os.startfile(os.path.dirname(save_path))
-            except Exception as e:
-                messagebox.showerror("Erreur", f"Erreur lors de l'export: {str(e)}")
+            # Créer un fichier de configuration
+            config_path = os.path.join("Datas", "documents", "mailmerge_config.txt")
+            colonnes = list(filtered_df.columns)
+            
+            with open(config_path, 'w', encoding='utf-8') as f:
+                f.write(f"Fichier Excel pour publipostage: {excel_dest}\n")
+                f.write(f"Nombre de lignes: {len(filtered_df)}\n")
+                f.write(f"Colonnes disponibles:\n")
+                for col in colonnes:
+                    f.write(f"- {col}\n")
+            
+            messagebox.showinfo("Publipostage configuré", 
+                f"Fichier configuré pour le publipostage!\n\n"
+                f"Fichier copié vers: {excel_dest}\n\n"
+                f"Pour utiliser dans Word:\n"
+                f"1. Ouvrir Word\n"
+                f"2. Publipostage > Sélectionner les destinataires > Utiliser une liste existante\n"
+                f"3. Sélectionner: {excel_dest}\n\n"
+                f"Colonnes disponibles: {', '.join(colonnes[:5])}{'...' if len(colonnes) > 5 else ''}")
+            #else:
+            messagebox.showinfo("Succès", f"Fichier Excel exporté avec succès!\n{len(filtered_df)} lignes exportées.\n\nVous pouvez maintenant utiliser ce fichier pour le publipostage dans Word.")
+            
+            # Ouvrir le dossier contenant le fichier
+            # os.startfile(os.path.dirname(save_path))
+        except Exception as e:
+            messagebox.showerror("Erreur", f"Erreur lors de l'export: {str(e)}")
 
     def __init__(self):
         super().__init__()
@@ -341,18 +342,30 @@ class Application(tk.Tk):
         self.file_path = None
         self.df = None
 
+        # Thème par défaut
+        self.apply_theme("Clair")
+
         # Créer le layout principal avec deux frames
-        main_frame = tk.Frame(self)
+        main_frame = ttk.Frame(self, style="TFrame")
         main_frame.pack(fill="both", expand=True, padx=10, pady=10)
 
         # Frame de gauche pour l'image
-        left_frame = tk.Frame(main_frame, width=200)
+        left_frame = ttk.Frame(main_frame, width=200, style="TFrame")
         left_frame.pack(side="left", fill="y", padx=(0, 20))
         left_frame.pack_propagate(False)  # Empêche le frame de se redimensionner
 
         # Frame de droite pour les widgets
-        right_frame = tk.Frame(main_frame)
+        right_frame = ttk.Frame(main_frame, style="TFrame")
         right_frame.pack(side="right", fill="both", expand=True)
+
+        # Sélecteur de style (Clair/Sombre)
+        #theme_select_frame = ttk.Frame(left_frame, style="TFrame")
+        #theme_select_frame.pack(fill="x", pady=(0, 5))
+        #ttk.Label(theme_select_frame, text="Style:", style="TLabel").pack(side="left")
+        #self.theme_combo = ttk.Combobox(theme_select_frame, values=["Clair", "Sombre"], state="readonly", width=10)
+        #self.theme_combo.current(0)
+        #self.theme_combo.pack(side="left", padx=5)
+        #self.theme_combo.bind("<<ComboboxSelected>>", lambda e: self.apply_theme(self.theme_combo.get()))
 
         # Ajouter l'image sur le côté gauche
         try:
@@ -364,45 +377,124 @@ class Application(tk.Tk):
                 # Redimensionner l'image pour qu'elle tienne dans le frame (max 150px de large)
                 pil_image.thumbnail((150, 150), Image.Resampling.LANCZOS)
                 self.logo_image = ImageTk.PhotoImage(pil_image)
-                logo_label = tk.Label(left_frame, image=self.logo_image)
+                logo_label = ttk.Label(left_frame, image=self.logo_image, style="TLabel")
                 logo_label.pack(pady=20)
             else:
                 # Fallback si l'image n'existe pas
-                logo_label = tk.Label(left_frame, text="Logo TMH", font=("Arial", 16, "bold"))
+                logo_label = ttk.Label(left_frame, text="Logo TMH", style="Title.TLabel")
                 logo_label.pack(pady=20)
         except Exception as e:
             # En cas d'erreur, afficher un texte à la place
-            logo_label = tk.Label(left_frame, text="Logo TMH", font=("Arial", 16, "bold"))
+            logo_label = ttk.Label(left_frame, text="Logo TMH", style="Title.TLabel")
             logo_label.pack(pady=20)
+
+       
 
         # Widgets dans le frame de droite
         # Titre de l'application
-        title_label = tk.Label(right_frame, text="Générateur de Documents de Formation", 
-                              font=("Arial", 14, "bold"), justify="center")
+        title_label = ttk.Label(right_frame, text="Générateur de Documents de Formation", style="Title.TLabel", justify="center")
         title_label.pack(pady=10)
         
-        tk.Button(right_frame, text="Charger Fichier Excel", command=self.load_excel).pack(pady=10)
+        ttk.Button(right_frame, text="Charger Fichier Excel", command=self.load_excel).pack(pady=10)
         
-        tk.Label(right_frame, text="Date (AAAA-MM-JJ):").pack()
-        self.date_entry = tk.Entry(right_frame)
+        ttk.Label(right_frame, text="Date (AAAA-MM-JJ):", style="TLabel").pack()
+        self.date_entry = ttk.Entry(right_frame)
         self.date_entry.pack()
 
-        tk.Label(right_frame, text="Type de Formation:").pack()
-        self.formation_entry = tk.Entry(right_frame)
+        ttk.Label(right_frame, text="Type de Formation:").pack()
+        #self.formation_entry = tk.Entry(right_frame)
+        #self.formation_entry.pack()
+        self.formation_entry = ttk.Combobox(right_frame, values=["AUTOPILOT", "AUTOPILOT Niveau 2", "BASES THERMIQUE MODULES 1,2 & 3","BASES TRAIGO (24V série 7 et 48R + 80V série 8)","LEVIO STAXIO SERIE P et HC","LITHIUM-ION TMHMS & TMHMI","LSI-SSI","OPTIO H & VECTOR R","OSE","RADIO SHUTTLE","RRE H et RRE H2 ","RRE H2","TONERO 15-35 STAGE V","TONERO 35-80 STAGE V","TONERO HST STAGE V","TRAIGO 80 Série 9 20-35","TRAIGO 80 Série 9 60-80","VECTOR A"])
         self.formation_entry.pack()
 
-        # Remettre le bouton d'export Excel
-        tk.Button(right_frame, text="Filtrer et Exporter Excel", command=self.filter_and_export_excel).pack(pady=10)
-        
-        tk.Button(right_frame, text="Ouvrir le chevalet", command=self.open_chevalet).pack(pady=5)
-        
-        tk.Button(right_frame, text="Sélectionner template chevalet", command=self.select_chevalet_template).pack(pady=5)
-        
-        tk.Button(right_frame, text="Sélectionner fichier Excel pour publipostage", command=self.select_excel_for_mailmerge).pack(pady=5)
-        
-        tk.Button(right_frame, text="Ouvrir feuille d'emargement", command=self.open_word_file).pack(pady=10)
 
-        tk.Button(right_frame, text="Ouvrir convention", command=self.open_convention_file).pack(pady=10)
+        # Remettre le bouton d'export Excel
+        ttk.Button(right_frame, width=50, text="Filtrer et Exporter Excel", command=self.filter_and_export_excel).pack(pady=10)
+        
+        ttk.Button(right_frame, width=50, text="Ouvrir le chevalet", command=self.open_chevalet).pack(pady=5)
+        
+        ttk.Button(right_frame, width=50, text="Sélectionner template chevalet", command=self.select_chevalet_template).pack(pady=5)
+        
+        ttk.Button(right_frame, width=50, text="Sélectionner fichier Excel pour publipostage", command=self.select_excel_for_mailmerge).pack(pady=5)
+        
+        ttk.Button(right_frame, width=50, text="Ouvrir feuille d'emargement", command=self.open_word_file).pack(pady=10)
+
+        ttk.Button(right_frame, width=50, text="Ouvrir convention", command=self.open_convention_file).pack(pady=10)
+
+    def apply_theme(self, mode: str):
+        """Applique un thème clair/sombre et styles ttk."""
+        try:
+            style = ttk.Style()
+            style.theme_use("clam")
+
+            if str(mode).lower().startswith("sombre"):
+                bg = "#1f1f1f"
+                fg = "#f0f0f0"
+                accent = "#d32f2f"  # Rouge TMH
+                entry_bg = "#2a2a2a"
+                border = "#3a3a3a"
+                active = "#b71c1c"
+            else:
+                bg = "#f7f7f7"
+                fg = "#222222"
+                accent = "#d32f2f"
+                entry_bg = "#ffffff"
+                border = "#d0d0d0"
+                active = "#b71c1c"
+
+            self.bg_color = bg
+            self.fg_color = fg
+            self.accent_color = accent
+
+            # Fond de la fenêtre principale
+            self.configure(bg=bg)
+
+            # Styles de base
+            style.configure("TFrame", background=bg)
+            style.configure("TLabel", background=bg, foreground=fg)
+            style.configure("Title.TLabel", background=bg, foreground=fg, font=("Arial", 14, "bold"))
+
+            style.configure(
+                "TButton",
+                background=border,
+                foreground=fg,
+                bordercolor=border,
+                focusthickness=2,
+                focuscolor=accent
+            )
+            style.map(
+                "TButton",
+                background=[("active", accent)],
+                foreground=[("active", "white")]
+            )
+
+            style.configure(
+                "Accent.TButton",
+                background=accent,
+                foreground="white",
+                bordercolor=accent
+            )
+            style.map("Accent.TButton", background=[("active", active)])
+
+            style.configure(
+                "TEntry",
+                fieldbackground=entry_bg,
+                background=entry_bg,
+                foreground=fg,
+                bordercolor=border
+            )
+            style.configure(
+                "TCombobox",
+                fieldbackground=entry_bg,
+                background=entry_bg,
+                foreground=fg,
+                bordercolor=border
+            )
+
+            self.style = style
+        except Exception:
+            # En cas d'erreur de style, ignorer silencieusement pour ne pas bloquer l'appli
+            pass
 
     def open_chevalet(self):
         """Ouvre le template Word de chevalet pour le publipostage"""
