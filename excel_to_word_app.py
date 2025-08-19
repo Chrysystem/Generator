@@ -271,10 +271,11 @@ class Application(tk.Tk):
     def open_word_file(self):
         """Ouvre un fichier Word avec l'application par défaut"""
         #file_path = filedialog.askopenfilename(filetypes=[("Word Files", "*.docx")], title="Ouvrir un fichier Word")
-        file_path = os.path.join("Datas", "documents", "Feuille_Emargement.docx")
-        if file_path:
-            import os
+        file_path = resource_path(os.path.join("Datas", "documents", "EMARGEMENT-SxxA-CARQUEFOU.docx"))
+        if os.path.exists(file_path):
             os.startfile(file_path)
+        else:
+            messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
 
     def filter_and_export_excel(self):
         """Filtre les données et exporte vers un fichier Excel pour publipostage"""

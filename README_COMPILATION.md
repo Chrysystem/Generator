@@ -83,3 +83,5 @@ Si vous rencontrez des problèmes :
 3. Essayez de réinstaller les dépendances : `pip install --upgrade -r requirements.txt`
 
 
+
+
