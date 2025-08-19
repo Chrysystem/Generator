@@ -286,7 +286,7 @@ class Application(tk.Tk):
         # Demander où sauvegarder le fichier
         save_path = os.path.join("Datas", "Log", "Log_export.xlsx")
         #save_path = filedialog.asksaveasfilename(
-         #   defaultextension=".xlsx",
+        #   defaultextension=".xlsx",
         #    filetypes=[("Excel Files", "*.xlsx")],
         #    title="Sauvegarder le fichier Excel filtré"
         #)
