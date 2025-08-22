@@ -258,6 +258,44 @@ def export_filtered_excel(filtered_data, formation_name="", date_filter=""):
 
 # === Interface Tkinter ===
 class Application(tk.Tk):
+    def generate_filtered_mailmerge_without_tmhf(self):
+        """Génère un Excel filtré excluant l'institution 'Toyota Material Handling France S.A.S.'
+        à partir de Datas/documents/source_publipostage.xlsx
+        """
+        try:
+            source_path = resource_path(os.path.join("Datas", "documents", "source_publipostage.xlsx"))
+            if not os.path.exists(source_path):
+                messagebox.showerror("Erreur", f"Fichier source introuvable:\n{source_path}")
+                return
+
+            df = pd.read_excel(source_path)
+
+            institution_col = None
+            for candidate in ["institution", "Institution", "INSTITUTION"]:
+                if candidate in df.columns:
+                    institution_col = candidate
+                    break
+
+            if institution_col is None:
+                messagebox.showerror("Erreur", "Colonne 'institution' introuvable dans le fichier source.")
+                return
+
+            mask = ~df[institution_col].astype(str).str.contains("Toyota Material Handling France S.A.S.", na=False)
+            filtered = df[mask]
+
+            if filtered.empty:
+                messagebox.showinfo("Info", "Après exclusion, aucune ligne restante.")
+                return
+
+            dest_path = resource_path(os.path.join("Datas", "documents", "source_publipostage_sans_TMHF.xlsx"))
+            filtered.to_excel(dest_path, index=False)
+
+            messagebox.showinfo(
+                "Succès",
+                f"Fichier généré:\n{dest_path}\n\nLignes exportées: {len(filtered)}"
+            )
+        except Exception as e:
+            messagebox.showerror("Erreur", f"Erreur lors de la génération: {str(e)}")
     def open_convention_file(self):
         """Ouvre un fichier Word avec l'application par défaut dans le dossier Datas/documents (toujours accessible)"""
         file_path = resource_path(os.path.join("Datas", "documents", "CONVENTION-Sxx 2025-BUSSY.docx"))
@@ -442,6 +480,7 @@ class Application(tk.Tk):
         # Onglet 4: Publipostage
         ttk.Button(tab4, width=50, text="Sélectionner template chevalet", command=self.select_chevalet_template).pack(pady=10)
         ttk.Button(tab4, width=50, text="Sélectionner fichier Excel pour publipostage", command=self.select_excel_for_mailmerge).pack(pady=10)
+        ttk.Button(tab4, width=50, text="Générer Excel sans institution TMHF", command=self.generate_filtered_mailmerge_without_tmhf).pack(pady=10)
 
     def apply_theme(self, mode: str):
         """Applique un thème clair/sombre et styles ttk."""
