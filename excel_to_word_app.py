@@ -446,11 +446,15 @@ class Application(tk.Tk):
         tab2 = ttk.Frame(notebook, style="TFrame")
         tab3 = ttk.Frame(notebook, style="TFrame")
         tab4 = ttk.Frame(notebook, style="TFrame")
+        tab5 = ttk.Frame(notebook, style="TFrame")
+
+
 
         notebook.add(tab1, text="Données & Filtre")
         notebook.add(tab2, text="Documents Word")
         notebook.add(tab3, text="À venir")
         notebook.add(tab4, text="Options")
+        notebook.add(tab5, text="Settings")
 
         # Onglet 1: Importation, date, type, filtrer/exporter
         ttk.Button(tab1, text="Charger Fichier Excel", command=self.load_excel).pack(pady=10)
