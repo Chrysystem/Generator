@@ -337,7 +337,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Rev-20250812-01")
+        self.title("Rev-20250822-01")
         self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None
@@ -614,17 +614,17 @@ class Application(tk.Tk):
             # Afficher les informations sur les colonnes de filtrage
             info_text = "Fichier chargé avec succès!\n\n"
             
-            if 'datedebutsession' in self.df.columns:
-                dates_uniques = self.df['datedebutsession'].dropna().unique()
-                info_text += f"Dates disponibles: {', '.join(map(str, dates_uniques[:5]))}\n"
-                if len(dates_uniques) > 5:
-                    info_text += f"... et {len(dates_uniques) - 5} autres dates\n"
+            #if 'datedebutsession' in self.df.columns:
+            #    dates_uniques = self.df['datedebutsession'].dropna().unique()
+            #   info_text += f"Dates disponibles: {', '.join(map(str, dates_uniques[:5]))}\n"
+            #    if len(dates_uniques) > 5:
+            #        info_text += f"... et {len(dates_uniques) - 5} autres dates\n"
             
-            if 'course full name' in self.df.columns:
-                formations_uniques = self.df['course full name'].dropna().unique()
-                info_text += f"\nFormations disponibles: {', '.join(map(str, formations_uniques[:3]))}\n"
-                if len(formations_uniques) > 3:
-                    info_text += f"... et {len(formations_uniques) - 3} autres formations"
+            #if 'course full name' in self.df.columns:
+            #    formations_uniques = self.df['course full name'].dropna().unique()
+            #    info_text += f"\nFormations disponibles: {', '.join(map(str, formations_uniques[:3]))}\n"
+            #    if len(formations_uniques) > 3:
+            #        info_text += f"... et {len(formations_uniques) - 3} autres formations"
             
             messagebox.showinfo("Succès", info_text)
 
