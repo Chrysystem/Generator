@@ -310,6 +310,17 @@ class Application(tk.Tk):
         else:
             messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
 
+    def open_certificat_file(self):
+        file_path = resource_path(os.path.join("Datas", "documents", "CERTIFICAT DE REALISATION-SXX.doc"))
+
+        if os.path.exists(file_path):
+            os.startfile(file_path)
+        else:
+            messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
+
+
+
+
     def open_word_file(self):
         """Ouvre un fichier Word avec l'application par défaut"""
         #file_path = filedialog.askopenfilename(filetypes=[("Word Files", "*.docx")], title="Ouvrir un fichier Word")
@@ -480,6 +491,7 @@ class Application(tk.Tk):
 
         # Onglet 3: Placeholder
         ttk.Label(tab3, text="Fonctionnalités à venir", style="TLabel").pack(pady=20)
+        ttk.Button(tab3, width=50, text="Ouvrir Certificat", command=self.open_certificat_file).pack(pady=10)
 
         # Onglet 4: Publipostage
         ttk.Button(tab4, width=50, text="Sélectionner template chevalet", command=self.select_chevalet_template).pack(pady=10)
