@@ -41,12 +41,24 @@ if ($missing.Count -gt 0) {
   exit 1
 }
 
-# 4) Run PyInstaller with existing spec
+# 4) Clean previous build artifacts
+Write-Host "Cleaning previous build artifacts..." -ForegroundColor Yellow
+if (Test-Path "build") {
+  try {
+    Remove-Item -Recurse -Force "build" -ErrorAction Stop
+    Write-Host "✓ Previous build folder removed" -ForegroundColor Green
+  } catch {
+    Write-Host "Warning: Could not remove build folder. Trying to continue..." -ForegroundColor Yellow
+  }
+}
+
+# 5) Run PyInstaller with existing spec
 Write-Host "Building executable with PyInstaller..." -ForegroundColor Yellow
 pyinstaller --clean --noconfirm excel_to_word_app.spec
 
 if ($LASTEXITCODE -ne 0) {
   Write-Host "Build failed." -ForegroundColor Red
+  Write-Host "Try closing all applications and running the script again." -ForegroundColor Yellow
   exit 1
 }
 
