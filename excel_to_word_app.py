@@ -396,31 +396,48 @@ class Application(tk.Tk):
         title_label = ttk.Label(right_frame, text="Générateur de Documents de Formation", style="Title.TLabel", justify="center")
         title_label.pack(pady=10)
         
-        ttk.Button(right_frame, text="Charger Fichier Excel", command=self.load_excel).pack(pady=10)
-        
-        ttk.Label(right_frame, text="Date (AAAA-MM-JJ):", style="TLabel").pack()
-        self.date_entry = ttk.Entry(right_frame)
+        # Création d'un Notebook avec 4 onglets
+        notebook = ttk.Notebook(right_frame)
+        notebook.pack(fill="both", expand=True)
+
+        tab1 = ttk.Frame(notebook, style="TFrame")
+        tab2 = ttk.Frame(notebook, style="TFrame")
+        tab3 = ttk.Frame(notebook, style="TFrame")
+        tab4 = ttk.Frame(notebook, style="TFrame")
+
+        notebook.add(tab1, text="Données & Filtre")
+        notebook.add(tab2, text="Documents Word")
+        notebook.add(tab3, text="À venir")
+        notebook.add(tab4, text="Options")
+
+        # Onglet 1: Importation, date, type, filtrer/exporter
+        ttk.Button(tab1, text="Charger Fichier Excel", command=self.load_excel).pack(pady=10)
+        ttk.Label(tab1, text="Date (AAAA-MM-JJ):", style="TLabel").pack()
+        self.date_entry = ttk.Entry(tab1)
         self.date_entry.pack()
-
-        ttk.Label(right_frame, text="Type de Formation:").pack()
-        #self.formation_entry = tk.Entry(right_frame)
-        #self.formation_entry.pack()
-        self.formation_entry = ttk.Combobox(right_frame, values=["AUTOPILOT", "AUTOPILOT Niveau 2", "BASES THERMIQUE MODULES 1,2 & 3","BASES TRAIGO (24V série 7 et 48R + 80V série 8)","LEVIO STAXIO SERIE P et HC","LITHIUM-ION TMHMS & TMHMI","LSI-SSI","OPTIO H & VECTOR R","OSE","RADIO SHUTTLE","RRE H et RRE H2 ","RRE H2","TONERO 15-35 STAGE V","TONERO 35-80 STAGE V","TONERO HST STAGE V","TRAIGO 80 Série 9 20-35","TRAIGO 80 Série 9 60-80","VECTOR A"])
+        ttk.Label(tab1, text="Type de Formation:").pack()
+        self.formation_entry = ttk.Combobox(tab1, values=[
+            "AUTOPILOT", "AUTOPILOT Niveau 2", "BASES THERMIQUE MODULES 1,2 & 3",
+            "BASES TRAIGO (24V série 7 et 48R + 80V série 8)", "LEVIO STAXIO SERIE P et HC",
+            "LITHIUM-ION TMHMS & TMHMI", "LSI-SSI", "OPTIO H & VECTOR R", "OSE",
+            "RADIO SHUTTLE", "RRE H et RRE H2 ", "RRE H2", "TONERO 15-35 STAGE V",
+            "TONERO 35-80 STAGE V", "TONERO HST STAGE V", "TRAIGO 80 Série 9 20-35",
+            "TRAIGO 80 Série 9 60-80", "VECTOR A"
+        ])
         self.formation_entry.pack()
+        ttk.Button(tab1, width=50, text="Filtrer et Exporter Excel", command=self.filter_and_export_excel).pack(pady=10)
 
+        # Onglet 2: Actions documents
+        ttk.Button(tab2, width=50, text="Ouvrir le chevalet", command=self.open_chevalet).pack(pady=10)
+        ttk.Button(tab2, width=50, text="Ouvrir feuille d'emargement", command=self.open_word_file).pack(pady=10)
+        ttk.Button(tab2, width=50, text="Ouvrir convention", command=self.open_convention_file).pack(pady=10)
 
-        # Remettre le bouton d'export Excel
-        ttk.Button(right_frame, width=50, text="Filtrer et Exporter Excel", command=self.filter_and_export_excel).pack(pady=10)
-        
-        ttk.Button(right_frame, width=50, text="Ouvrir le chevalet", command=self.open_chevalet).pack(pady=5)
-        
-        ttk.Button(right_frame, width=50, text="Sélectionner template chevalet", command=self.select_chevalet_template).pack(pady=5)
-        
-        ttk.Button(right_frame, width=50, text="Sélectionner fichier Excel pour publipostage", command=self.select_excel_for_mailmerge).pack(pady=5)
-        
-        ttk.Button(right_frame, width=50, text="Ouvrir feuille d'emargement", command=self.open_word_file).pack(pady=10)
+        # Onglet 3: Placeholder
+        ttk.Label(tab3, text="Fonctionnalités à venir", style="TLabel").pack(pady=20)
 
-        ttk.Button(right_frame, width=50, text="Ouvrir convention", command=self.open_convention_file).pack(pady=10)
+        # Onglet 4: Publipostage
+        ttk.Button(tab4, width=50, text="Sélectionner template chevalet", command=self.select_chevalet_template).pack(pady=10)
+        ttk.Button(tab4, width=50, text="Sélectionner fichier Excel pour publipostage", command=self.select_excel_for_mailmerge).pack(pady=10)
 
     def apply_theme(self, mode: str):
         """Applique un thème clair/sombre et styles ttk."""
