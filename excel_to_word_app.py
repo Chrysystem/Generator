@@ -486,6 +486,10 @@ class Application(tk.Tk):
         ttk.Button(tab4, width=50, text="Sélectionner fichier Excel pour publipostage", command=self.select_excel_for_mailmerge).pack(pady=10)
         ttk.Button(tab4, width=50, text="Générer Excel sans institution TMHF", command=self.generate_filtered_mailmerge_without_tmhf).pack(pady=10)
 
+        # Onglet 5: Settings
+        ttk.Label(tab5, text="Configuration", style="TLabel").pack(pady=10)
+        ttk.Button(tab5, width=50, text="Configurer fichier Excel par défaut", command=self.configure_default_excel).pack(pady=10)
+
     def apply_theme(self, mode: str):
         """Applique un thème clair/sombre et styles ttk."""
         try:
@@ -654,26 +658,72 @@ class Application(tk.Tk):
             except Exception as e:
                 messagebox.showerror("Erreur", f"Erreur lors de la sélection du fichier Excel: {str(e)}")
 
+    def configure_default_excel(self):
+        """Permet de configurer le fichier Excel par défaut"""
+        file_path = filedialog.askopenfilename(
+            filetypes=[("Excel Files", "*.xlsx")],
+            title="Sélectionner le fichier Excel par défaut"
+        )
+        if file_path:
+            try:
+                # Sauvegarder le chemin dans un fichier de configuration
+                config_path = os.path.join("Datas", "config", "default_excel.txt")
+                os.makedirs(os.path.dirname(config_path), exist_ok=True)
+                
+                with open(config_path, 'w', encoding='utf-8') as f:
+                    f.write(file_path)
+                
+                messagebox.showinfo("Succès", 
+                    f"Fichier Excel par défaut configuré!\n\n"
+                    f"Chemin: {file_path}\n\n"
+                    f"Ce fichier sera maintenant utilisé par le bouton 'Charger Fichier Excel'.")
+                    
+            except Exception as e:
+                messagebox.showerror("Erreur", f"Erreur lors de la configuration: {str(e)}")
+
+    def get_default_excel_path(self):
+        """Récupère le chemin du fichier Excel par défaut depuis la configuration"""
+        config_path = os.path.join("Datas", "config", "default_excel.txt")
+        if os.path.exists(config_path):
+            try:
+                with open(config_path, 'r', encoding='utf-8') as f:
+                    path = f.read().strip()
+                if os.path.exists(path):
+                    return path
+            except:
+                pass
+        
+        # Chemin par défaut si pas de configuration
+        return resource_path(os.path.join("Datas", "Export Inscription FaceToFace pour admin Formateur175241145.xlsx"))
+
     def load_excel(self):
-        self.file_path = filedialog.askopenfilename(filetypes=[("Excel Files", "*.xlsx")])
-        if self.file_path:
-            self.df = pd.read_excel(self.file_path)
-            # Afficher les informations sur les colonnes de filtrage
-            info_text = "Fichier chargé avec succès!\n\n"
-            
-            #if 'datedebutsession' in self.df.columns:
-            #    dates_uniques = self.df['datedebutsession'].dropna().unique()
-            #   info_text += f"Dates disponibles: {', '.join(map(str, dates_uniques[:5]))}\n"
-            #    if len(dates_uniques) > 5:
-            #        info_text += f"... et {len(dates_uniques) - 5} autres dates\n"
-            
-            #if 'course full name' in self.df.columns:
-            #    formations_uniques = self.df['course full name'].dropna().unique()
-            #    info_text += f"\nFormations disponibles: {', '.join(map(str, formations_uniques[:3]))}\n"
-            #    if len(formations_uniques) > 3:
-            #        info_text += f"... et {len(formations_uniques) - 3} autres formations"
-            
-            messagebox.showinfo("Succès", info_text)
+        try:
+            #self.file_path = filedialog.askopenfilename(filetypes=[("Datas", "*.xlsx")])
+            #ajout de fonction pour charger le fichier excel par défaut
+            self.file_path = self.get_default_excel_path()
+            if os.path.exists(self.file_path):
+                self.df = pd.read_excel(self.file_path)
+                # Afficher les informations sur les colonnes de filtrage
+                info_text = "Fichier chargé avec succès!\n\n"
+                
+                #if 'datedebutsession' in self.df.columns:
+                #    dates_uniques = self.df['datedebutsession'].dropna().unique()
+                #   info_text += f"Dates disponibles: {', '.join(map(str, dates_uniques[:5]))}\n"
+                #    if len(dates_uniques) > 5:
+                #        info_text += f"... et {len(dates_uniques) - 5} autres dates\n"
+                
+                #if 'course full name' in self.df.columns:
+                #    formations_uniques = self.df['course full name'].dropna().unique()
+                #    info_text += f"\nFormations disponibles: {', '.join(map(str, formations_uniques[:3]))}\n"
+                #    if len(formations_uniques) > 3:
+                #        info_text += f"... et {len(formations_uniques) - 3} autres formations"
+                
+                messagebox.showinfo("Succès", info_text)
+            else:
+                messagebox.showerror("Erreur", "Vérifié le chemin du fichier")
+        except Exception as e:
+            messagebox.showerror("Erreur", f"Erreur lors du chargement du fichier Excel: {str(e)}")
+
 
     def filter_data(self) -> Optional[pd.DataFrame]:
         """Filtre les données selon les critères saisis"""
