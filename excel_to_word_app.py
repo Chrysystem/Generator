@@ -260,14 +260,18 @@ def export_filtered_excel(filtered_data, formation_name="", date_filter=""):
 class Application(tk.Tk):
     def open_convention_file(self):
         """Ouvre un fichier Word avec l'application par défaut dans le dossier Datas/documents (toujours accessible)"""
-        initial_dir = resource_path(os.path.join("Datas", "documents"))
-        file_path = filedialog.askopenfilename(
-            filetypes=[("Word Files", "*.docx")],
-            title="Ouvrir un fichier Word",
-            initialdir=initial_dir
-        )
-        if file_path:
+        file_path = resource_path(os.path.join("Datas", "documents", "CONVENTION-Sxx 2025-BUSSY.docx"))
+        #initial_dir = resource_path(os.path.join("Datas", "documents"))
+        #file_path = filedialog.askopenfilename(
+        #    filetypes=[("Word Files", "*.docx")],
+        #    title="Ouvrir un fichier Word",
+        #    initialdir=initial_dir
+        #)
+        if os.path.exists(file_path):
             os.startfile(file_path)
+        else:
+            messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
+
     def open_word_file(self):
         """Ouvre un fichier Word avec l'application par défaut"""
         #file_path = filedialog.askopenfilename(filetypes=[("Word Files", "*.docx")], title="Ouvrir un fichier Word")
