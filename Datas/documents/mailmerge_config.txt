@@ -1,5 +1,5 @@
 Fichier Excel pour publipostage: Datas\documents\source_publipostage.xlsx
-Nombre de lignes: 7
+Nombre de lignes: 4
 Colonnes disponibles:
 - userid
 - courseid

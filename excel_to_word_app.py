@@ -319,6 +319,21 @@ class Application(tk.Tk):
             messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
 
 
+    def open_attestation_file(self):
+        file_path = resource_path(os.path.join("Datas", "documents", "CERTIFICAT DE REALISATION.doc"))
+
+        if os.path.exists(file_path):
+            os.startfile(file_path)
+        else:
+            messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
+
+    def open_certificatri_file(self):
+        file_path = resource_path(os.path.join("Datas", "documents", "CERTIFICAT DE REALISATION.doc"))
+
+        if os.path.exists(file_path):
+            os.startfile(file_path)
+        else:
+            messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
 
 
     def open_word_file(self):
@@ -462,9 +477,9 @@ class Application(tk.Tk):
 
 
         notebook.add(tab1, text="Données & Filtre")
-        notebook.add(tab2, text="Documents Word")
-        notebook.add(tab3, text="À venir")
-        notebook.add(tab4, text="Options")
+        notebook.add(tab2, text="Documents Générales")
+        notebook.add(tab3, text="RC")
+        notebook.add(tab4, text="Certif/Attest")
         notebook.add(tab5, text="Settings")
 
         # Onglet 1: Importation, date, type, filtrer/exporter
@@ -487,20 +502,24 @@ class Application(tk.Tk):
         # Onglet 2: Actions documents
         ttk.Button(tab2, width=50, text="Ouvrir le chevalet", command=self.open_chevalet).pack(pady=10)
         ttk.Button(tab2, width=50, text="Ouvrir feuille d'emargement", command=self.open_word_file).pack(pady=10)
-        ttk.Button(tab2, width=50, text="Ouvrir convention", command=self.open_convention_file).pack(pady=10)
+        
 
         # Onglet 3: Placeholder
-        ttk.Label(tab3, text="Fonctionnalités à venir", style="TLabel").pack(pady=20)
+        # ttk.Label(tab3, text="Fonctionnalités à venir", style="TLabel").pack(pady=20)
         ttk.Button(tab3, width=50, text="Ouvrir Certificat", command=self.open_certificat_file).pack(pady=10)
+        ttk.Button(tab3, width=50, text="Ouvrir convention", command=self.open_convention_file).pack(pady=10)
 
         # Onglet 4: Publipostage
-        ttk.Button(tab4, width=50, text="Sélectionner template chevalet", command=self.select_chevalet_template).pack(pady=10)
-        ttk.Button(tab4, width=50, text="Sélectionner fichier Excel pour publipostage", command=self.select_excel_for_mailmerge).pack(pady=10)
-        ttk.Button(tab4, width=50, text="Générer Excel sans institution TMHF", command=self.generate_filtered_mailmerge_without_tmhf).pack(pady=10)
+        ttk.Label(tab4, text="Fonctionnalités à venir", style="TLabel").pack(pady=20)
+        ttk.Button(tab4, width=50, text="Ouvrir Attestation", command=self.open_attestation_file).pack(pady=10)
+        ttk.Button(tab4, width=50, text="Ouvrir Certificat RI", command=self.open_certificatri_file).pack(pady=10)
 
         # Onglet 5: Settings
         ttk.Label(tab5, text="Configuration", style="TLabel").pack(pady=10)
         ttk.Button(tab5, width=50, text="Configurer fichier Excel par défaut", command=self.configure_default_excel).pack(pady=10)
+        ttk.Button(tab5, width=50, text="Sélectionner template chevalet", command=self.select_chevalet_template).pack(pady=10)
+        ttk.Button(tab5, width=50, text="Sélectionner fichier Excel pour publipostage", command=self.select_excel_for_mailmerge).pack(pady=10)
+        ttk.Button(tab5, width=50, text="Générer Excel sans institution TMHF", command=self.generate_filtered_mailmerge_without_tmhf).pack(pady=10)
 
     def apply_theme(self, mode: str):
         """Applique un thème clair/sombre et styles ttk."""
@@ -716,7 +735,7 @@ class Application(tk.Tk):
             if os.path.exists(self.file_path):
                 self.df = pd.read_excel(self.file_path)
                 # Afficher les informations sur les colonnes de filtrage
-                info_text = "Fichier chargé avec succès!\n\n"
+                info_text = "Fichier chargé avec succès!\n\n" , f"Fichier: {os.path.basename(self.file_path)}\n"
                 
                 #if 'datedebutsession' in self.df.columns:
                 #    dates_uniques = self.df['datedebutsession'].dropna().unique()
@@ -731,6 +750,7 @@ class Application(tk.Tk):
                 #        info_text += f"... et {len(formations_uniques) - 3} autres formations"
                 
                 messagebox.showinfo("Succès", info_text)
+                                    
             else:
                 messagebox.showerror("Erreur", "Vérifié le chemin du fichier")
         except Exception as e:
