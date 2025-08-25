@@ -296,8 +296,12 @@ class Application(tk.Tk):
             )
         except Exception as e:
             messagebox.showerror("Erreur", f"Erreur lors de la génération: {str(e)}")
+
+        # ouverture de fichier convention de Stage
     def open_convention_file(self):
         """Ouvre un fichier Word avec l'application par défaut dans le dossier Datas/documents (toujours accessible)"""
+        # Exécuter le filtrage TMHFR avant d'ouvrir la convention
+        self.generate_filtered_mailmerge_without_tmhf()
         file_path = resource_path(os.path.join("Datas", "documents", "CONVENTION-Sxx 2025-BUSSY.docx"))
         #initial_dir = resource_path(os.path.join("Datas", "documents"))
         #file_path = filedialog.askopenfilename(
@@ -497,6 +501,12 @@ class Application(tk.Tk):
             "TRAIGO 80 Série 9 60-80", "VECTOR A"
         ])
         self.formation_entry.pack()
+        ttk.Label(tab1, text="Lieu de Formation:").pack()
+        self.lieuformation_entry = ttk.Combobox(tab1, values=[
+            "BUSSY", "DAGNEUX", "CARQUEFOU"
+        ])
+
+        self.lieuformation_entry.pack()
         ttk.Button(tab1, width=50, text="Filtrer et Exporter Excel", command=self.filter_and_export_excel).pack(pady=10)
 
         # Onglet 2: Actions documents
@@ -519,7 +529,8 @@ class Application(tk.Tk):
         ttk.Button(tab5, width=50, text="Configurer fichier Excel par défaut", command=self.configure_default_excel).pack(pady=10)
         ttk.Button(tab5, width=50, text="Sélectionner template chevalet", command=self.select_chevalet_template).pack(pady=10)
         ttk.Button(tab5, width=50, text="Sélectionner fichier Excel pour publipostage", command=self.select_excel_for_mailmerge).pack(pady=10)
-        ttk.Button(tab5, width=50, text="Générer Excel sans institution TMHF", command=self.generate_filtered_mailmerge_without_tmhf).pack(pady=10)
+        # fonction de filtrage sans institution TMHFR (debug) 
+        #ttk.Button(tab5, width=50, text="Générer Excel sans institution TMHFR", command=self.generate_filtered_mailmerge_without_tmhf).pack(pady=10)
 
     def apply_theme(self, mode: str):
         """Applique un thème clair/sombre et styles ttk."""
@@ -735,7 +746,7 @@ class Application(tk.Tk):
             if os.path.exists(self.file_path):
                 self.df = pd.read_excel(self.file_path)
                 # Afficher les informations sur les colonnes de filtrage
-                info_text = "Fichier chargé avec succès!\n\n" , f"Fichier: {os.path.basename(self.file_path)}\n"
+                info_text = f"Fichier chargé avec succès!\n\nFichier: {os.path.basename(self.file_path)}\n"
                 
                 #if 'datedebutsession' in self.df.columns:
                 #    dates_uniques = self.df['datedebutsession'].dropna().unique()
@@ -765,6 +776,7 @@ class Application(tk.Tk):
 
         date_filter = self.date_entry.get()
         formation_filter = self.formation_entry.get()
+        lieu_filter = self.lieuformation_entry.get()
 
         filtered_df: pd.DataFrame = self.df.copy()
         
@@ -795,8 +807,26 @@ class Application(tk.Tk):
                 filtered_df = filtered_df[filtered_df['course full name'].astype(str).str.lower().str.contains(formation_filter_lower, na=False)]
                 debug_info += f"Après filtre formation '{formation_filter}' (recherche insensible à la casse): {len(filtered_df)} lignes\n"
         
+        # Filtre par lieu de formation
+        if lieu_filter:
+            lieu_filter_lower = lieu_filter.lower()
+            # Cherche sur colonnes probables
+            possible_cols = [
+                'facetofacename'
+            ]
+            found_col = None
+            for col in possible_cols:
+                if col in filtered_df.columns:
+                    found_col = col
+                    break
+            if found_col:
+                filtered_df = filtered_df[filtered_df[found_col].astype(str).str.lower().str.contains(lieu_filter_lower, na=False)]
+                debug_info += f"Après filtre lieu '{lieu_filter}': {len(filtered_df)} lignes\n"
+            else:
+                debug_info += "Colonne de lieu non trouvée, filtre ignoré\n"
+
         # Si aucun filtre n'est appliqué, utiliser toutes les données
-        if not date_filter and not formation_filter:
+        if not date_filter and not formation_filter and not lieu_filter:
             debug_info += "Aucun filtre appliqué - utilisation de toutes les données\n"
 
         if len(filtered_df) == 0:
