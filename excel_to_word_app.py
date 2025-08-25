@@ -10,6 +10,8 @@ import sys
 import os
 import numpy
 from PIL import Image, ImageTk
+import time
+import tempfile
 
 # === Fonctions pour les documents Word ===
 def generate_convention(data_row):
@@ -258,6 +260,171 @@ def export_filtered_excel(filtered_data, formation_name="", date_filter=""):
 
 # === Interface Tkinter ===
 class Application(tk.Tk):
+    def _open_eml_fallback(self, subject: str, html_body: str, to_addr: str = ""):
+        """Crée un brouillon .eml avec corps HTML et l'ouvre via l'appli mail par défaut."""
+        try:
+            # EML minimal (texte HTML)
+            lines = [
+                "MIME-Version: 1.0",
+                f"Subject: {subject}",
+                f"To: {to_addr}",
+                "Content-Type: text/html; charset=UTF-8",
+                "Content-Transfer-Encoding: 8bit",
+                "",
+                html_body,
+            ]
+            content = "\r\n".join(lines)
+            fd, path = tempfile.mkstemp(suffix=".eml", prefix="facturation_")
+            with os.fdopen(fd, 'w', encoding='utf-8', newline='') as f:
+                f.write(content)
+            os.startfile(path)
+            return True
+        except Exception:
+            return False
+    def send_billing_email(self):
+        """Ouvre un mail Outlook pour facturation avec tableau récap depuis source_publipostage_sans_TMHF.xlsx"""
+        try:
+            # S'assurer que le fichier source filtré existe
+            source_path = resource_path(os.path.join("Datas", "documents", "source_publipostage_sans_TMHF.xlsx"))
+            if not os.path.exists(source_path):
+                # Tente de le générer via la fonction existante
+                self.generate_filtered_mailmerge_without_tmhf()
+            if not os.path.exists(source_path):
+                messagebox.showerror("Erreur", f"Fichier introuvable après génération:\n{source_path}")
+                return
+
+            df = pd.read_excel(source_path)
+            if df.empty:
+                messagebox.showinfo("Info", "Le fichier source est vide après filtrage.")
+                return
+
+            # Limiter les colonnes utiles si présentes
+            preferred_cols = [
+                'nom', 'prenom', 'institution','code cpne', 'course full name', 'datedebutsession','datefinsession','duration_in_hours'
+            ]
+            display_cols = [c for c in preferred_cols if c in df.columns]
+            if not display_cols:
+                display_cols = list(df.columns)[:8]
+
+            df_display = df[display_cols].copy()
+
+            # Convertir en HTML
+            html_table = df_display.to_html(index=False, border=1, justify='left')
+
+            # Corps de mail
+            subject = "Facturation - Récapitulatif participants concessionnaire"
+            intro = (
+                "Bonjour,\n\n"
+                "Veuillez trouver ci-dessous le récapitulatif des participants pour facturation.\n"
+            )
+            outro = (
+                "\nCordialement,\n"
+                "Générateur de Documents de Formation"
+            )
+
+            body_html = (
+                f"<p>{intro.replace('\n','<br>')}</p>"
+                f"{html_table}"
+                f"<p>{outro.replace('\n','<br>')}</p>"
+            )
+
+            # Ouvrir un nouveau mail Outlook (win32com) avec initialisation COM
+            try:
+                try:
+                    import pythoncom  # type: ignore[import-not-found]
+                    pythoncom.CoInitialize()
+                except Exception:
+                    pass
+
+                # Import local pour éviter les erreurs de linter
+                from win32com.client import Dispatch  # type: ignore[import-not-found]
+                try:
+                    from win32com.client import gencache  # type: ignore[import-not-found]
+                    outlook = gencache.EnsureDispatch('Outlook.Application')
+                except Exception:
+                    try:
+                        outlook = Dispatch('Outlook.Application')
+                    except Exception:
+                        # Tenter de lancer Outlook puis réessayer
+                        try:
+                            os.startfile('outlook')
+                            time.sleep(3)
+                            outlook = Dispatch('Outlook.Application')
+                        except Exception as inner_e:
+                            raise inner_e
+            except Exception as e:
+                # Fallback .eml si Outlook COM indisponible (p.ex. nouveau Outlook)
+                if self._open_eml_fallback(subject, body_html):
+                    messagebox.showinfo(
+                        "Info",
+                        #"Outlook COM indisponible. Brouillon .eml ouvert dans le client mail par défaut."
+                        "Brouillon .eml ouvert dans le client mail par défaut."
+                    )
+                    return
+                messagebox.showerror(
+                    "Erreur",
+                    f"Outlook/pywin32 non disponible: {e}. Désactivez le 'Nouveau Outlook' et utilisez Outlook classique, ou ouvrez le .eml manuellement."
+                )
+                return
+
+            try:
+                # S'assurer que la session MAPI est prête
+                try:
+                    mapi = outlook.GetNamespace("MAPI")
+                    try:
+                        mapi.Logon()
+                    except Exception:
+                        pass
+                except Exception:
+                    pass
+                mail = outlook.CreateItem(0)  # 0 = olMailItem
+            except Exception as e:
+                if self._open_eml_fallback(subject, body_html):
+                    messagebox.showinfo(
+                        "Info",
+                        "Outlook ne permet pas la création COM. Brouillon .eml ouvert."
+                    )
+                    return
+                messagebox.showerror(
+                    "Erreur",
+                    f"Impossible de créer un message Outlook: {e}. Désactivez le 'Nouveau Outlook' et utilisez Outlook classique."
+                )
+                return
+            mail.Subject = subject
+            # Optionnel: définir un destinataire par défaut
+            # mail.To = "compta@exemple.com"
+            # Préfixer le corps pour conserver le footer Outlook si présent
+            try:
+                existing = getattr(mail, 'HTMLBody', '')
+            except Exception:
+                existing = ''
+            mail.HTMLBody = body_html + existing
+            try:
+                mail.Display()  # Ouvre le brouillon pour vérification/envoi manuel
+            except Exception as e:
+                # En dernier recours, tenter l'envoi direct (peut nécessiter autorisations)
+                try:
+                    mail.Send()
+                    messagebox.showinfo("Succès", "Mail de facturation envoyé via Outlook.")
+                    return
+                except Exception as e:
+                    if self._open_eml_fallback(subject, body_html):
+                        messagebox.showinfo(
+                            "Info",
+                            "Outlook bloque l'affichage/envoi. Brouillon .eml ouvert."
+                        )
+                        return
+                    messagebox.showerror(
+                        "Erreur",
+                        f"Impossible d'afficher ou d'envoyer le mail: {e}. Désactivez le 'Nouveau Outlook' ou utilisez l'EML."
+                    )
+                    return
+
+            messagebox.showinfo("Succès", "Brouillon de mail de facturation ouvert dans Outlook.")
+        except Exception as e:
+            messagebox.showerror("Erreur", f"Erreur lors de la préparation du mail: {str(e)}")
+
+
     def generate_filtered_mailmerge_without_tmhf(self):
         """Génère un Excel filtré excluant l'institution 'Toyota Material Handling France S.A.S.'
         à partir de Datas/documents/source_publipostage.xlsx
@@ -324,7 +491,7 @@ class Application(tk.Tk):
 
 
     def open_attestation_file(self):
-        file_path = resource_path(os.path.join("Datas", "documents", "CERTIFICAT DE REALISATION.doc"))
+        file_path = resource_path(os.path.join("Datas", "documents", "ATTESTATION-SXX-BUSSY-TEMPLATE.doc"))
 
         if os.path.exists(file_path):
             os.startfile(file_path)
@@ -332,7 +499,7 @@ class Application(tk.Tk):
             messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
 
     def open_certificatri_file(self):
-        file_path = resource_path(os.path.join("Datas", "documents", "CERTIFICAT DE REALISATION.doc"))
+        file_path = resource_path(os.path.join("Datas", "documents", "CERTIFICAT-SXX-BUSSY-TEMPLATE.doc"))
 
         if os.path.exists(file_path):
             os.startfile(file_path)
@@ -510,22 +677,24 @@ class Application(tk.Tk):
         ttk.Button(tab1, width=50, text="Filtrer et Exporter Excel", command=self.filter_and_export_excel).pack(pady=10)
 
         # Onglet 2: Actions documents
+        ttk.Label(tab2, text="Documents générals", style="TLabel").pack(pady=20)
         ttk.Button(tab2, width=50, text="Ouvrir le chevalet", command=self.open_chevalet).pack(pady=10)
         ttk.Button(tab2, width=50, text="Ouvrir feuille d'emargement", command=self.open_word_file).pack(pady=10)
         
 
         # Onglet 3: Placeholder
-        # ttk.Label(tab3, text="Fonctionnalités à venir", style="TLabel").pack(pady=20)
-        ttk.Button(tab3, width=50, text="Ouvrir Certificat", command=self.open_certificat_file).pack(pady=10)
-        ttk.Button(tab3, width=50, text="Ouvrir convention", command=self.open_convention_file).pack(pady=10)
+        ttk.Label(tab3, text="Certificats et Conventions", style="TLabel").pack(pady=20)
+        ttk.Button(tab3, width=50, text="Ouvrir Certificat de Réalisation", command=self.open_certificat_file).pack(pady=10)
+        ttk.Button(tab3, width=50, text="Ouvrir Convention", command=self.open_convention_file).pack(pady=10)
+        ttk.Button(tab3, width=50, text="Envoyer mail facturation", command=self.send_billing_email).pack(pady=10)
 
         # Onglet 4: Publipostage
-        ttk.Label(tab4, text="Fonctionnalités à venir", style="TLabel").pack(pady=20)
+        ttk.Label(tab4, text="Attestations & Certificat RI", style="TLabel").pack(pady=20)
         ttk.Button(tab4, width=50, text="Ouvrir Attestation", command=self.open_attestation_file).pack(pady=10)
         ttk.Button(tab4, width=50, text="Ouvrir Certificat RI", command=self.open_certificatri_file).pack(pady=10)
 
         # Onglet 5: Settings
-        ttk.Label(tab5, text="Configuration", style="TLabel").pack(pady=10)
+        ttk.Label(tab5, text="Configuration", style="TLabel").pack(pady=20)
         ttk.Button(tab5, width=50, text="Configurer fichier Excel par défaut", command=self.configure_default_excel).pack(pady=10)
         ttk.Button(tab5, width=50, text="Sélectionner template chevalet", command=self.select_chevalet_template).pack(pady=10)
         ttk.Button(tab5, width=50, text="Sélectionner fichier Excel pour publipostage", command=self.select_excel_for_mailmerge).pack(pady=10)
