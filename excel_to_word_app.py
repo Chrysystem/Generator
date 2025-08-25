@@ -281,6 +281,7 @@ class Application(tk.Tk):
             return True
         except Exception:
             return False
+        
     def send_billing_email(self):
         """Ouvre un mail Outlook pour facturation avec tableau récap depuis source_publipostage_sans_TMHF.xlsx"""
         try:
@@ -314,7 +315,7 @@ class Application(tk.Tk):
             # Corps de mail
             subject = "Facturation - Récapitulatif participants concessionnaire"
             intro = (
-                "Bonjour,\n\n"
+                "Bonjour Enora,\n\n"
                 "Veuillez trouver ci-dessous le récapitulatif des participants pour facturation.\n"
             )
             outro = (
@@ -392,7 +393,7 @@ class Application(tk.Tk):
                 return
             mail.Subject = subject
             # Optionnel: définir un destinataire par défaut
-            # mail.To = "compta@exemple.com"
+            mail.To = "Enora.Meigne@fr.toyota-industries.eu"
             # Préfixer le corps pour conserver le footer Outlook si présent
             try:
                 existing = getattr(mail, 'HTMLBody', '')
