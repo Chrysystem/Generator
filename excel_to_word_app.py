@@ -12,6 +12,7 @@ import numpy
 from PIL import Image, ImageTk
 import time
 import tempfile
+import subprocess
 
 # === Fonctions pour les documents Word ===
 def generate_convention(data_row):
@@ -260,30 +261,72 @@ def export_filtered_excel(filtered_data, formation_name="", date_filter=""):
 
 # === Interface Tkinter ===
 class Application(tk.Tk):
-    def _open_eml_fallback(self, subject: str, html_body: str, to_addr: str = ""):
-        """Crée un brouillon .eml avec corps HTML et l'ouvre via l'appli mail par défaut."""
-        try:
-            # EML minimal (texte HTML)
-            lines = [
-                "MIME-Version: 1.0",
-                f"Subject: {subject}",
-                f"To: {to_addr}",
-                "Content-Type: text/html; charset=UTF-8",
-                "Content-Transfer-Encoding: 8bit",
-                "",
-                html_body,
-            ]
-            content = "\r\n".join(lines)
-            fd, path = tempfile.mkstemp(suffix=".eml", prefix="facturation_")
-            with os.fdopen(fd, 'w', encoding='utf-8', newline='') as f:
-                f.write(content)
-            os.startfile(path)
-            return True
-        except Exception:
-            return False
+
         
+    def open_new_mail(self):
+        """Ouvre un nouveau mail dans Outlook ou le client mail par défaut"""
+        try:
+            # Méthode 1: Essayer d'ouvrir Outlook directement
+            try:
+                subprocess.run(['outlook', '/c', 'ipm.note'], check=True)
+                messagebox.showinfo("Succès", "Nouveau mail ouvert dans Outlook.")
+                return
+            except (subprocess.CalledProcessError, FileNotFoundError):
+                pass
+            
+            # Méthode 2: Essayer avec le chemin complet d'Outlook
+            try:
+                outlook_paths = [
+                    r"C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE",
+                    r"C:\Program Files (x86)\Microsoft Office\root\Office16\OUTLOOK.EXE",
+                    r"C:\Program Files\Microsoft Office\Office16\OUTLOOK.EXE",
+                    r"C:\Program Files (x86)\Microsoft Office\Office16\OUTLOOK.EXE",
+                    r"C:\Program Files\Microsoft Office\root\Office15\OUTLOOK.EXE",
+                    r"C:\Program Files (x86)\Microsoft Office\root\Office15\OUTLOOK.EXE"
+                ]
+                
+                for outlook_path in outlook_paths:
+                    if os.path.exists(outlook_path):
+                        subprocess.run([outlook_path, '/c', 'ipm.note'], check=True)
+                        messagebox.showinfo("Succès", "Nouveau mail ouvert dans Outlook.")
+                        return
+            except (subprocess.CalledProcessError, FileNotFoundError):
+                pass
+            
+            # Méthode 3: Créer un fichier .eml vide
+            try:
+                # Créer le contenu d'un fichier .eml vide
+                eml_content = [
+                    "MIME-Version: 1.0",
+                    "Subject: test d'envoie",
+                    "To: Christophe.Desandiego@fr.toyota-industries.eu",
+                    "Content-Type: text/plain; charset=UTF-8",
+                    "Content-Transfer-Encoding: 8bit",
+                    "",
+                    ""
+                ]
+                
+                # Créer un fichier temporaire .eml
+                fd, eml_path = tempfile.mkstemp(suffix=".eml", prefix="nouveau_mail_")
+                
+                with os.fdopen(fd, 'w', encoding='utf-8', newline='') as f:
+                    f.write("\r\n".join(eml_content))
+                
+                # Ouvrir le fichier .eml avec l'application par défaut
+                os.startfile(eml_path)
+                
+                messagebox.showinfo("Succès", 
+                    "Nouveau mail ouvert dans votre client mail par défaut.\n\n"
+                    "Vous pouvez maintenant rédiger votre mail.")
+                
+            except Exception as e:
+                messagebox.showerror("Erreur", f"Impossible d'ouvrir un nouveau mail: {str(e)}")
+                
+        except Exception as e:
+            messagebox.showerror("Erreur", f"Erreur lors de l'ouverture du mail: {str(e)}")
+
     def send_billing_email(self):
-        """Ouvre un mail Outlook pour facturation avec tableau récap depuis source_publipostage_sans_TMHF.xlsx"""
+        """Crée un fichier .eml pour facturation avec tableau récap depuis source_publipostage_sans_TMHF.xlsx"""
         try:
             # S'assurer que le fichier source filtré existe
             source_path = resource_path(os.path.join("Datas", "documents", "source_publipostage_sans_TMHF.xlsx"))
@@ -329,99 +372,37 @@ class Application(tk.Tk):
                 f"<p>{outro.replace('\n','<br>')}</p>"
             )
 
-            # Ouvrir un nouveau mail Outlook (win32com) avec initialisation COM
+            # Créer un fichier .eml
             try:
-                try:
-                    import pythoncom  # type: ignore[import-not-found]
-                    pythoncom.CoInitialize()
-                except Exception:
-                    pass
-
-                # Import local pour éviter les erreurs de linter
-                from win32com.client import Dispatch  # type: ignore[import-not-found]
-                try:
-                    from win32com.client import gencache  # type: ignore[import-not-found]
-                    outlook = gencache.EnsureDispatch('Outlook.Application')
-                except Exception:
-                    try:
-                        outlook = Dispatch('Outlook.Application')
-                    except Exception:
-                        # Tenter de lancer Outlook puis réessayer
-                        try:
-                            os.startfile('outlook')
-                            time.sleep(3)
-                            outlook = Dispatch('Outlook.Application')
-                        except Exception as inner_e:
-                            raise inner_e
+                # Créer le contenu du fichier .eml
+                eml_content = [
+                    "MIME-Version: 1.0",
+                    f"Subject: {subject}",
+                    "To: Enora.Meigne@fr.toyota-industries.eu",
+                    "Content-Type: text/html; charset=UTF-8",
+                    "Content-Transfer-Encoding: 8bit",
+                    "",
+                    body_html
+                ]
+                
+                # Créer un fichier temporaire .eml
+                import tempfile
+                fd, eml_path = tempfile.mkstemp(suffix=".eml", prefix="facturation_")
+                
+                with os.fdopen(fd, 'w', encoding='utf-8', newline='') as f:
+                    f.write("\r\n".join(eml_content))
+                
+                # Ouvrir le fichier .eml avec l'application par défaut
+                os.startfile(eml_path)
+                
+                messagebox.showinfo("Succès", 
+                    "Fichier .eml créé et ouvert dans votre client mail par défaut.\n\n"
+                    "Le mail contient le tableau récapitulatif des participants pour facturation.\n"
+                    "Vous pouvez maintenant l'envoyer depuis votre client mail.")
+                
             except Exception as e:
-                # Fallback .eml si Outlook COM indisponible (p.ex. nouveau Outlook)
-                if self._open_eml_fallback(subject, body_html):
-                    messagebox.showinfo(
-                        "Info",
-                        #"Outlook COM indisponible. Brouillon .eml ouvert dans le client mail par défaut."
-                        "Brouillon .eml ouvert dans le client mail par défaut."
-                    )
-                    return
-                messagebox.showerror(
-                    "Erreur",
-                    f"Outlook/pywin32 non disponible: {e}. Désactivez le 'Nouveau Outlook' et utilisez Outlook classique, ou ouvrez le .eml manuellement."
-                )
-                return
-
-            try:
-                # S'assurer que la session MAPI est prête
-                try:
-                    mapi = outlook.GetNamespace("MAPI")
-                    try:
-                        mapi.Logon()
-                    except Exception:
-                        pass
-                except Exception:
-                    pass
-                mail = outlook.CreateItem(0)  # 0 = olMailItem
-            except Exception as e:
-                if self._open_eml_fallback(subject, body_html):
-                    messagebox.showinfo(
-                        "Info",
-                        "Outlook ne permet pas la création COM. Brouillon .eml ouvert."
-                    )
-                    return
-                messagebox.showerror(
-                    "Erreur",
-                    f"Impossible de créer un message Outlook: {e}. Désactivez le 'Nouveau Outlook' et utilisez Outlook classique."
-                )
-                return
-            mail.Subject = subject
-            # Optionnel: définir un destinataire par défaut
-            mail.To = "Enora.Meigne@fr.toyota-industries.eu"
-            # Préfixer le corps pour conserver le footer Outlook si présent
-            try:
-                existing = getattr(mail, 'HTMLBody', '')
-            except Exception:
-                existing = ''
-            mail.HTMLBody = body_html + existing
-            try:
-                mail.Display()  # Ouvre le brouillon pour vérification/envoi manuel
-            except Exception as e:
-                # En dernier recours, tenter l'envoi direct (peut nécessiter autorisations)
-                try:
-                    mail.Send()
-                    messagebox.showinfo("Succès", "Mail de facturation envoyé via Outlook.")
-                    return
-                except Exception as e:
-                    if self._open_eml_fallback(subject, body_html):
-                        messagebox.showinfo(
-                            "Info",
-                            "Outlook bloque l'affichage/envoi. Brouillon .eml ouvert."
-                        )
-                        return
-                    messagebox.showerror(
-                        "Erreur",
-                        f"Impossible d'afficher ou d'envoyer le mail: {e}. Désactivez le 'Nouveau Outlook' ou utilisez l'EML."
-                    )
-                    return
-
-            messagebox.showinfo("Succès", "Brouillon de mail de facturation ouvert dans Outlook.")
+                messagebox.showerror("Erreur", f"Impossible de créer le fichier .eml: {str(e)}")
+                
         except Exception as e:
             messagebox.showerror("Erreur", f"Erreur lors de la préparation du mail: {str(e)}")
 
@@ -688,6 +669,7 @@ class Application(tk.Tk):
         ttk.Button(tab3, width=50, text="Ouvrir Certificat de Réalisation", command=self.open_certificat_file).pack(pady=10)
         ttk.Button(tab3, width=50, text="Ouvrir Convention", command=self.open_convention_file).pack(pady=10)
         ttk.Button(tab3, width=50, text="Envoyer mail facturation", command=self.send_billing_email).pack(pady=10)
+        ttk.Button(tab3, width=50, text="Ouvrir nouveau mail", command=self.open_new_mail).pack(pady=10)
 
         # Onglet 4: Publipostage
         ttk.Label(tab4, text="Attestations & Certificat RI", style="TLabel").pack(pady=20)
