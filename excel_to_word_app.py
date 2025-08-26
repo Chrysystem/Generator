@@ -358,7 +358,7 @@ class Application(tk.Tk):
             df_display = df[display_cols].copy()
 
             # Convertir en HTML
-            html_table = df_display.to_html(index=False, border=1, justify='left')
+            html_table = df_display.to_html(index=False, border=2, justify='left')
 
             # Corps de mail
             subject = "Facturation - Récapitulatif participants concessionnaire"
@@ -403,7 +403,7 @@ class Application(tk.Tk):
                 messagebox.showinfo("Succès", 
                     "Fichier .eml créé et ouvert dans votre client mail par défaut.\n\n"
                     "Le mail contient le tableau récapitulatif des participants pour facturation.\n"
-                    "Vous pouvez maintenant l'envoyer depuis votre client mail.")
+                    "Pour envoyer ce mail appuyez sur 'Renvoyer ce message'.")
                 
             except Exception as e:
                 messagebox.showerror("Erreur", f"Impossible de créer le fichier .eml: {str(e)}")
@@ -563,7 +563,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Rev-20250825-01")
+        self.title("Rev-20250826-01")
         self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None
