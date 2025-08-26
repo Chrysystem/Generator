@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Générator Doc "
-#define MyAppVersion "0.5"
+#define MyAppVersion "1.3"
 #define MyAppPublisher "Chrysystem"
 #define MyAppExeName "Generator_Formation.exe"
 #define MyAppAssocName "My Program File"
