@@ -261,40 +261,9 @@ def export_filtered_excel(filtered_data, formation_name="", date_filter=""):
 
 # === Interface Tkinter ===
 class Application(tk.Tk):
-
-        
+# test d'ouverture de mail 
     def open_new_mail(self):
-        """Ouvre un nouveau mail dans Outlook ou le client mail par défaut"""
         try:
-            # Méthode 1: Essayer d'ouvrir Outlook directement
-            try:
-                subprocess.run(['outlook', '/c', 'ipm.note'], check=True)
-                messagebox.showinfo("Succès", "Nouveau mail ouvert dans Outlook.")
-                return
-            except (subprocess.CalledProcessError, FileNotFoundError):
-                pass
-            
-            # Méthode 2: Essayer avec le chemin complet d'Outlook
-            try:
-                outlook_paths = [
-                    r"C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE",
-                    r"C:\Program Files (x86)\Microsoft Office\root\Office16\OUTLOOK.EXE",
-                    r"C:\Program Files\Microsoft Office\Office16\OUTLOOK.EXE",
-                    r"C:\Program Files (x86)\Microsoft Office\Office16\OUTLOOK.EXE",
-                    r"C:\Program Files\Microsoft Office\root\Office15\OUTLOOK.EXE",
-                    r"C:\Program Files (x86)\Microsoft Office\root\Office15\OUTLOOK.EXE"
-                ]
-                
-                for outlook_path in outlook_paths:
-                    if os.path.exists(outlook_path):
-                        subprocess.run([outlook_path, '/c', 'ipm.note'], check=True)
-                        messagebox.showinfo("Succès", "Nouveau mail ouvert dans Outlook.")
-                        return
-            except (subprocess.CalledProcessError, FileNotFoundError):
-                pass
-            
-            # Méthode 3: Créer un fichier .eml vide
-            try:
                 # Créer le contenu d'un fichier .eml vide
                 eml_content = [
                     "MIME-Version: 1.0",
@@ -305,8 +274,7 @@ class Application(tk.Tk):
                     "",
                     ""
                 ]
-                
-                # Créer un fichier temporaire .eml
+             #Créer un fichier temporaire .eml
                 fd, eml_path = tempfile.mkstemp(suffix=".eml", prefix="nouveau_mail_")
                 
                 with os.fdopen(fd, 'w', encoding='utf-8', newline='') as f:
@@ -319,11 +287,71 @@ class Application(tk.Tk):
                     "Nouveau mail ouvert dans votre client mail par défaut.\n\n"
                     "Vous pouvez maintenant rédiger votre mail.")
                 
-            except Exception as e:
-                messagebox.showerror("Erreur", f"Impossible d'ouvrir un nouveau mail: {str(e)}")
-                
         except Exception as e:
-            messagebox.showerror("Erreur", f"Erreur lors de l'ouverture du mail: {str(e)}")
+                messagebox.showerror("Erreur", f"Impossible d'ouvrir un nouveau mail: {str(e)}")
+                  
+
+    # def open_new_mail(self):
+    #    """Ouvre un nouveau mail dans Outlook ou le client mail par défaut"""
+    # try:
+    #         # Méthode 1: Essayer d'ouvrir Outlook directement
+    #         try:
+    #             subprocess.run(['outlook', '/c', 'ipm.note'], check=True)
+    #             messagebox.showinfo("Succès", "Nouveau mail ouvert dans Outlook.")
+    #             return
+    #         except (subprocess.CalledProcessError, FileNotFoundError):
+    #             pass
+            
+    #         # Méthode 2: Essayer avec le chemin complet d'Outlook
+    #         try:
+    #             outlook_paths = [
+    #                 r"C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE",
+    #                 r"C:\Program Files (x86)\Microsoft Office\root\Office16\OUTLOOK.EXE",
+    #                 r"C:\Program Files\Microsoft Office\Office16\OUTLOOK.EXE",
+    #                 r"C:\Program Files (x86)\Microsoft Office\Office16\OUTLOOK.EXE",
+    #                 r"C:\Program Files\Microsoft Office\root\Office15\OUTLOOK.EXE",
+    #                 r"C:\Program Files (x86)\Microsoft Office\root\Office15\OUTLOOK.EXE"
+    #             ]
+                
+    #             for outlook_path in outlook_paths:
+    #                 if os.path.exists(outlook_path):
+    #                     subprocess.run([outlook_path, '/c', 'ipm.note'], check=True)
+    #                     messagebox.showinfo("Succès", "Nouveau mail ouvert dans Outlook.")
+    #                     return
+    #         except (subprocess.CalledProcessError, FileNotFoundError):
+    #             pass
+            
+    #         # Méthode 3: Créer un fichier .eml vide
+    #         try:
+    #             # Créer le contenu d'un fichier .eml vide
+    #             eml_content = [
+    #                 "MIME-Version: 1.0",
+    #                 "Subject: test d'envoie",
+    #                 "To: Christophe.Desandiego@fr.toyota-industries.eu",
+    #                 "Content-Type: text/plain; charset=UTF-8",
+    #                 "Content-Transfer-Encoding: 8bit",
+    #                 "",
+    #                 ""
+    #             ]
+                
+    #             # Créer un fichier temporaire .eml
+    #             fd, eml_path = tempfile.mkstemp(suffix=".eml", prefix="nouveau_mail_")
+                
+    #             with os.fdopen(fd, 'w', encoding='utf-8', newline='') as f:
+    #                 f.write("\r\n".join(eml_content))
+                
+    #             # Ouvrir le fichier .eml avec l'application par défaut
+    #             os.startfile(eml_path)
+                
+    #             messagebox.showinfo("Succès", 
+    #                 "Nouveau mail ouvert dans votre client mail par défaut.\n\n"
+    #                 "Vous pouvez maintenant rédiger votre mail.")
+                
+    #         except Exception as e:
+    #             messagebox.showerror("Erreur", f"Impossible d'ouvrir un nouveau mail: {str(e)}")
+                
+    #     except Exception as e:
+    #         messagebox.showerror("Erreur", f"Erreur lors de l'ouverture du mail: {str(e)}")
 
     def send_billing_email(self):
         """Crée un fichier .eml pour facturation avec tableau récap depuis source_publipostage_sans_TMHF.xlsx"""
