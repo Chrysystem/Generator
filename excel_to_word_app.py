@@ -14,6 +14,9 @@ import time
 import tempfile
 import subprocess
 
+
+
+
 # === Fonctions pour les documents Word ===
 def generate_convention(data_row):
     doc = Document()
@@ -263,33 +266,7 @@ def export_filtered_excel(filtered_data, formation_name="", date_filter=""):
 class Application(tk.Tk):
 # test d'ouverture de mail 
     def open_new_mail(self):
-        try:
-                # Créer le contenu d'un fichier .eml vide
-                eml_content = [
-                    "MIME-Version: 1.0",
-                    "Subject: test d'envoie",
-                    "To: Christophe.Desandiego@fr.toyota-industries.eu",
-                    "Content-Type: text/plain; charset=UTF-8",
-                    "Content-Transfer-Encoding: 8bit",
-                    "",
-                    ""
-                ]
-             #Créer un fichier temporaire .eml
-                fd, eml_path = tempfile.mkstemp(suffix=".eml", prefix="nouveau_mail_")
-                
-                with os.fdopen(fd, 'w', encoding='utf-8', newline='') as f:
-                    f.write("\r\n".join(eml_content))
-                
-                # Ouvrir le fichier .eml avec l'application par défaut
-                os.startfile(eml_path)
-                
-                messagebox.showinfo("Succès", 
-                    "Nouveau mail ouvert dans votre client mail par défaut.\n\n"
-                    "Vous pouvez maintenant rédiger votre mail.")
-                
-        except Exception as e:
-                messagebox.showerror("Erreur", f"Impossible d'ouvrir un nouveau mail: {str(e)}")
-                  
+               
 
     # def open_new_mail(self):
     #    """Ouvre un nouveau mail dans Outlook ou le client mail par défaut"""
@@ -320,39 +297,39 @@ class Application(tk.Tk):
     #                     return
     #         except (subprocess.CalledProcessError, FileNotFoundError):
     #             pass
-            
-    #         # Méthode 3: Créer un fichier .eml vide
-    #         try:
-    #             # Créer le contenu d'un fichier .eml vide
-    #             eml_content = [
-    #                 "MIME-Version: 1.0",
-    #                 "Subject: test d'envoie",
-    #                 "To: Christophe.Desandiego@fr.toyota-industries.eu",
-    #                 "Content-Type: text/plain; charset=UTF-8",
-    #                 "Content-Transfer-Encoding: 8bit",
-    #                 "",
-    #                 ""
-    #             ]
+            body_html = ("bonjour en bienvenue\n\n"
+                            "Ceci est un test d'envoie de mail \n"
+            )
+            # Méthode 3: Créer un fichier .eml vide
+            try:
+                # Créer le contenu d'un fichier .eml vide
+                eml_content = [
+                    "MIME-Version: 1.0",
+                    "Subject: test d'envoie",
+                    "To: Christophe.Desandiego@fr.toyota-industries.eu",
+                    "Content-Type: text/plain; charset=UTF-8",
+                    "Content-Transfer-Encoding: 8bit",
+                    "",
+                    f"<p>{body_html}</p>"
+        ]
                 
-    #             # Créer un fichier temporaire .eml
-    #             fd, eml_path = tempfile.mkstemp(suffix=".eml", prefix="nouveau_mail_")
+                # Créer un fichier temporaire .eml
+                fd, eml_path = tempfile.mkstemp(suffix=".eml", prefix="nouveau_mail_")
                 
-    #             with os.fdopen(fd, 'w', encoding='utf-8', newline='') as f:
-    #                 f.write("\r\n".join(eml_content))
+                with os.fdopen(fd, 'w', encoding='utf-8', newline='') as f:
+                    f.write("\r\n".join(eml_content))
                 
-    #             # Ouvrir le fichier .eml avec l'application par défaut
-    #             os.startfile(eml_path)
+                # Ouvrir le fichier .eml avec l'application par défaut
+                os.startfile(eml_path)
                 
-    #             messagebox.showinfo("Succès", 
-    #                 "Nouveau mail ouvert dans votre client mail par défaut.\n\n"
-    #                 "Vous pouvez maintenant rédiger votre mail.")
+                messagebox.showinfo("Succès", 
+                    "Nouveau mail ouvert dans votre client mail par défaut.\n\n"
+                    "Vous pouvez maintenant rédiger votre mail.")
                 
-    #         except Exception as e:
-    #             messagebox.showerror("Erreur", f"Impossible d'ouvrir un nouveau mail: {str(e)}")
+            except Exception as e:
+                messagebox.showerror("Erreur", f"Impossible d'ouvrir un nouveau mail: {str(e)}")
                 
-    #     except Exception as e:
-    #         messagebox.showerror("Erreur", f"Erreur lors de l'ouverture du mail: {str(e)}")
-
+    
     def send_billing_email(self):
         """Crée un fichier .eml pour facturation avec tableau récap depuis source_publipostage_sans_TMHF.xlsx"""
         try:
@@ -406,7 +383,7 @@ class Application(tk.Tk):
                 eml_content = [
                     "MIME-Version: 1.0",
                     f"Subject: {subject}",
-                    "To: Enora.Meigne@fr.toyota-industries.eu",
+                    "To: christophe.desandiego@fr.toyota-industries.eu",
                     "Content-Type: text/html; charset=UTF-8",
                     "Content-Transfer-Encoding: 8bit",
                     "",
@@ -697,7 +674,7 @@ class Application(tk.Tk):
         ttk.Button(tab3, width=50, text="Ouvrir Certificat de Réalisation", command=self.open_certificat_file).pack(pady=10)
         ttk.Button(tab3, width=50, text="Ouvrir Convention", command=self.open_convention_file).pack(pady=10)
         ttk.Button(tab3, width=50, text="Envoyer mail facturation", command=self.send_billing_email).pack(pady=10)
-        ttk.Button(tab3, width=50, text="Ouvrir nouveau mail", command=self.open_new_mail).pack(pady=10)
+        # ttk.Button(tab3, width=50, text="Ouvrir nouveau mail", command=self.open_new_mail).pack(pady=10)
 
         # Onglet 4: Publipostage
         ttk.Label(tab4, text="Attestations & Certificat RI", style="TLabel").pack(pady=20)
