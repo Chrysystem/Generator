@@ -110,14 +110,22 @@ def cleanup():
     print("Nettoyage des fichiers temporaires...")
     
     # Supprimer le dossier build s'il existe
-    if os.path.exists('build'):
-        shutil.rmtree('build')
-        print("✓ Dossier 'build' supprimé")
+    try:
+        if os.path.exists('build'):
+            shutil.rmtree('build')
+            print("✓ Dossier 'build' supprimé")
+    except PermissionError:
+        print("⚠ Impossible de supprimer le dossier 'build' (fichiers en cours d'utilisation)")
+    except Exception as e:
+        print(f"⚠ Erreur lors de la suppression du dossier 'build': {e}")
     
     # Supprimer le fichier .spec
-    if os.path.exists('excel_to_word_app.spec'):
-        os.remove('excel_to_word_app.spec')
-        print("✓ Fichier .spec supprimé")
+    try:
+        if os.path.exists('excel_to_word_app.spec'):
+            os.remove('excel_to_word_app.spec')
+            print("✓ Fichier .spec supprimé")
+    except Exception as e:
+        print(f"⚠ Erreur lors de la suppression du fichier .spec: {e}")
 
 def main():
     """Fonction principale"""

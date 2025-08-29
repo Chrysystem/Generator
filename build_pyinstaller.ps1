@@ -73,3 +73,4 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "Build succeeded!" -ForegroundColor Green
 Write-Host "Output folder: dist" -ForegroundColor Green
 Get-ChildItem dist -Recurse | ForEach-Object { $_.FullName }
+

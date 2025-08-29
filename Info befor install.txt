@@ -1,3 +1,3 @@
 Version test
 Version release du 250826-01
-Version de l'installateur 1.8
+Version de l'installateur 1.8.4

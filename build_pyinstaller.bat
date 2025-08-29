@@ -66,3 +66,4 @@ echo Output folder: dist
 for /r dist %%i in (*) do echo %%i
 
 endlocal
+

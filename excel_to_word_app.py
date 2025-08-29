@@ -418,6 +418,7 @@ class Application(tk.Tk):
         """
         try:
             source_path = resource_path(os.path.join("Datas", "documents", "source_publipostage.xlsx"))
+            
             if not os.path.exists(source_path):
                 messagebox.showerror("Erreur", f"Fichier source introuvable:\n{source_path}")
                 return
@@ -686,8 +687,8 @@ class Application(tk.Tk):
         ttk.Button(tab5, width=50, text="Configurer fichier Excel par défaut", command=self.configure_default_excel).pack(pady=10)
         ttk.Button(tab5, width=50, text="Sélectionner template chevalet", command=self.select_chevalet_template).pack(pady=10)
         ttk.Button(tab5, width=50, text="Sélectionner fichier Excel pour publipostage", command=self.select_excel_for_mailmerge).pack(pady=10)
-        # fonction de filtrage sans institution TMHFR (debug) 
-        #ttk.Button(tab5, width=50, text="Générer Excel sans institution TMHFR", command=self.generate_filtered_mailmerge_without_tmhf).pack(pady=10)
+        #fonction de filtrage sans institution TMHFR (debug) 
+        # ttk.Button(tab5, width=50, text="Générer Excel sans institution TMHFR", command=self.generate_filtered_mailmerge_without_tmhf).pack(pady=10)
 
     def apply_theme(self, mode: str):
         """Applique un thème clair/sombre et styles ttk."""
@@ -1013,7 +1014,26 @@ class Application(tk.Tk):
 def resource_path(relative_path):
     """Obtenir le chemin absolu vers une ressource, compatible dev et .exe PyInstaller"""
     if hasattr(sys, '_MEIPASS'):
-        return os.path.join(sys._MEIPASS, relative_path)
+        # Pour les exécutables PyInstaller, utiliser le répertoire de l'exécutable
+        # pour les fichiers de données qui ne sont pas embarqués
+        if relative_path.startswith("Datas"):
+            # Les fichiers de données restent dans le répertoire de l'exécutable
+            exe_dir = os.path.dirname(sys.executable)
+            full_path = os.path.join(exe_dir, relative_path)
+            
+            # Créer le dossier Datas s'il n'existe pas
+            datas_dir = os.path.join(exe_dir, "Datas")
+            if not os.path.exists(datas_dir):
+                os.makedirs(datas_dir, exist_ok=True)
+                # Créer aussi les sous-dossiers
+                os.makedirs(os.path.join(datas_dir, "documents"), exist_ok=True)
+                os.makedirs(os.path.join(datas_dir, "config"), exist_ok=True)
+                os.makedirs(os.path.join(datas_dir, "Log"), exist_ok=True)
+            
+            return full_path
+        else:
+            # Les autres ressources peuvent être dans _MEIPASS
+            return os.path.join(sys._MEIPASS, relative_path)
     return os.path.join(os.path.abspath("."), relative_path)
 
 
