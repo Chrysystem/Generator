@@ -496,9 +496,69 @@ class Application(tk.Tk):
 
 
     def open_word_file(self):
-        """Ouvre un fichier Word avec l'application par défaut"""
-        #file_path = filedialog.askopenfilename(filetypes=[("Word Files", "*.docx")], title="Ouvrir un fichier Word")
-        file_path = resource_path(os.path.join("Datas", "documents", "EMARGEMENT-SxxA-CARQUEFOU.docx"))
+        """Ouvre un fichier Word d'émargement selon la formation sélectionnée."""
+        # Texte saisi/choisi pour la formation (champ de filtre en haut)
+        try:
+            formation_text_raw = (self.formation_entry.get() or "")
+        except Exception:
+            formation_text_raw = ""
+
+        # Normalisation: minuscules et suppression des accents pour des comparaisons robustes
+        import unicodedata
+        def _normalize(text: str) -> str:
+            t = str(text or "").lower()
+            t = unicodedata.normalize('NFKD', t)
+            return "".join(c for c in t if not unicodedata.combining(c))
+
+        formation_text = _normalize(formation_text_raw)
+
+        # Règles par mots-clés → fichier à ouvrir
+        selection_rules = [
+            ("VECTOR A", "EMARGEMENT-24hrs.docx"),
+            ("LITHIUM-ION TMHMS & TMHMI", "EMARGEMENT-12hrs.docx"),
+            ("AUTOPILOT", "EMARGEMENT-32hrs.docx"),
+            ("AUTOPILOT Niveau 2", "EMARGEMENT-24hrs.docx"),
+            ("BASES THERMIQUE MODULES 1,2 & 3", "EMARGEMENT-24hrs.docx"),
+            ("BASES TRAIGO (24V série 7 et 48R + 80V série 8)", "EMARGEMENT-24hrs.docx"),
+            ("LEVIO STAXIO SERIE P et HC", "EMARGEMENT-24hrs.docx"),
+            ("LITHIUM-ION TMHMS & TMHMI", "EMARGEMENT-12hrs.docx"),
+            ("LSI-SSI", "EMARGEMENT-24hrs.docx"),
+            ("OPTIO H & VECTOR R", "EMARGEMENT-24hrs.docx"),
+            ("OSE", "EMARGEMENT-24hrs.docx"),
+            ("RADIO SHUTTLE", "EMARGEMENT-24hrs.docx"),
+            ("RRE H et RRE H2 ", "EMARGEMENT-24hrs.docx"),
+            ("RRE H2", "EMARGEMENT-24hrs.docx"),
+            ("TONERO 15-35 STAGE V", "EMARGEMENT-24hrs.docx"),
+            ("TONERO 35-80 STAGE V", "EMARGEMENT-24hrs.docx"),
+            ("TONERO HST STAGE V", "EMARGEMENT-24hrs.docx"),
+            ("TRAIGO 80 Série 9 20-35", "EMARGEMENT-24hrs.docx"),
+            ("TRAIGO 80 Série 9 60-80", "EMARGEMENT-24hrs.docx"),
+           
+        ]
+
+        default_filename = "EMARGEMENT-SxxA-CARQUEFOU.docx"
+        chosen_filename = None
+        for keyword, filename in selection_rules:
+            if _normalize(keyword) in formation_text:
+                chosen_filename = filename
+                break
+        if not chosen_filename:
+            chosen_filename = default_filename
+
+        file_path = resource_path(os.path.join("Datas", "documents", chosen_filename))
+
+        # Fallback sur le fichier par défaut si le choisi n'existe pas
+        if not os.path.exists(file_path) and chosen_filename != default_filename:
+            fallback_path = resource_path(os.path.join("Datas", "documents", default_filename))
+            if os.path.exists(fallback_path):
+                file_path = fallback_path
+            else:
+                messagebox.showerror(
+                    "Erreur",
+                    f"Fichier introuvable:\n{file_path}\n\nVérifiez la présence de:\n- {chosen_filename}\n- {default_filename}"
+                )
+                return
+
         if os.path.exists(file_path):
             os.startfile(file_path)
         else:
@@ -564,7 +624,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Rev-20250826-01")
+        self.title("Rev-20250909-01")
         self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None

@@ -12,11 +12,11 @@ def install_pyinstaller():
     """Installe PyInstaller si nécessaire"""
     try:
         import PyInstaller
-        print("✓ PyInstaller est déjà installé")
+        print("OK PyInstaller est deja installe")
     except ImportError:
         print("Installation de PyInstaller...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", "pyinstaller"])
-        print("✓ PyInstaller installé avec succès")
+        print("OK PyInstaller installe avec succes")
 
 def create_spec_file():
     """Crée le fichier .spec pour PyInstaller"""
@@ -83,11 +83,11 @@ exe = EXE(
     
     with open('excel_to_word_app.spec', 'w', encoding='utf-8') as f:
         f.write(spec_content)
-    print("✓ Fichier .spec créé")
+    print("OK Fichier .spec cree")
 
 def build_exe():
     """Compile l'application en .EXE"""
-    print("Début de la compilation...")
+    print("Debut de la compilation...")
     
     # Utiliser le fichier .spec pour la compilation
     result = subprocess.run([
@@ -97,11 +97,11 @@ def build_exe():
     ], capture_output=True, text=True)
     
     if result.returncode == 0:
-        print("✓ Compilation réussie!")
+        print("OK Compilation reussie!")
         print(f"L'exécutable se trouve dans: dist/Generator_Formation.exe")
         return True
     else:
-        print("❌ Erreur lors de la compilation:")
+        print("ERREUR lors de la compilation:")
         print(result.stderr)
         return False
 
@@ -113,19 +113,19 @@ def cleanup():
     try:
         if os.path.exists('build'):
             shutil.rmtree('build')
-            print("✓ Dossier 'build' supprimé")
+            print("OK Dossier 'build' supprime")
     except PermissionError:
-        print("⚠ Impossible de supprimer le dossier 'build' (fichiers en cours d'utilisation)")
+        print("ATTENTION: Impossible de supprimer le dossier 'build' (fichiers en cours d'utilisation)")
     except Exception as e:
-        print(f"⚠ Erreur lors de la suppression du dossier 'build': {e}")
+        print(f"ATTENTION: Erreur lors de la suppression du dossier 'build': {e}")
     
     # Supprimer le fichier .spec
     try:
         if os.path.exists('excel_to_word_app.spec'):
             os.remove('excel_to_word_app.spec')
-            print("✓ Fichier .spec supprimé")
+            print("OK Fichier .spec supprime")
     except Exception as e:
-        print(f"⚠ Erreur lors de la suppression du fichier .spec: {e}")
+        print(f"ATTENTION: Erreur lors de la suppression du fichier .spec: {e}")
 
 def main():
     """Fonction principale"""
@@ -134,7 +134,7 @@ def main():
     
     # Vérifier que le fichier principal existe
     if not os.path.exists('excel_to_word_app.py'):
-        print("❌ Erreur: Le fichier excel_to_word_app.py n'existe pas!")
+        print("ERREUR: Le fichier excel_to_word_app.py n'existe pas!")
         return
     
     # Vérifier que les ressources existent
@@ -146,35 +146,35 @@ def main():
             missing_files.append(file)
     
     if missing_files:
-        print(f"❌ Fichiers manquants: {', '.join(missing_files)}")
+        print(f"ERREUR: Fichiers manquants: {', '.join(missing_files)}")
         print("Assurez-vous que tous les fichiers requis sont présents dans le dossier.")
         return
     
     try:
         # Installer PyInstaller
         install_pyinstaller()
-        print()
+        print("")
         
         # Créer le fichier .spec
         create_spec_file()
-        print()
+        print("")
         
         # Compiler l'application
         if build_exe():
-            print()
-            print("=== SUCCÈS ===")
-            print("Votre application a été compilée avec succès!")
+            print("")
+            print("=== SUCCES ===")
+            print("Votre application a ete compilee avec succes!")
             print("L'exécutable se trouve dans: dist/Generator_Formation.exe")
-            print()
+            print("")
             print("Pour distribuer l'application:")
             print("1. Copiez le fichier dist/Generator_Formation.exe")
             print("2. Copiez le dossier Datas/ (s'il n'est pas inclus)")
             print("3. L'application peut être exécutée sur n'importe quel PC Windows")
         else:
-            print("❌ La compilation a échoué")
+            print("ERREUR: La compilation a echoue")
             
     except Exception as e:
-        print(f"❌ Erreur: {e}")
+        print(f"ERREUR: {e}")
     
     finally:
         # Nettoyer les fichiers temporaires
