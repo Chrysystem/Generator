@@ -457,7 +457,7 @@ class Application(tk.Tk):
         """Ouvre un fichier Word avec l'application par défaut dans le dossier Datas/documents (toujours accessible)"""
         # Exécuter le filtrage TMHFR avant d'ouvrir la convention
         self.generate_filtered_mailmerge_without_tmhf()
-        file_path = resource_path(os.path.join("Datas", "documents", "CONVENTION-Sxx 2025-BUSSY.docx"))
+        file_path = resource_path(os.path.join("Datas", "documents", "CONVENTION-Sxx 2025-BUSSY.dotx"))
         #initial_dir = resource_path(os.path.join("Datas", "documents"))
         #file_path = filedialog.askopenfilename(
         #    filetypes=[("Word Files", "*.docx")],
@@ -470,7 +470,7 @@ class Application(tk.Tk):
             messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
 
     def open_certificat_file(self):
-        file_path = resource_path(os.path.join("Datas", "documents", "CERTIFICAT DE REALISATION-SXX.doc"))
+        file_path = resource_path(os.path.join("Datas", "documents", "CERTIFICAT DE REALISATION-SXX.dotx"))
 
         if os.path.exists(file_path):
             os.startfile(file_path)
@@ -479,7 +479,7 @@ class Application(tk.Tk):
 
 
     def open_attestation_file(self):
-        file_path = resource_path(os.path.join("Datas", "documents", "ATTESTATION-SXX-BUSSY-TEMPLATE.doc"))
+        file_path = resource_path(os.path.join("Datas", "documents", "ATTESTATION-SXX-BUSSY-TEMPLATE.dotx"))
 
         if os.path.exists(file_path):
             os.startfile(file_path)
@@ -487,7 +487,7 @@ class Application(tk.Tk):
             messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
 
     def open_certificatri_file(self):
-        file_path = resource_path(os.path.join("Datas", "documents", "CERTIFICAT-SXX-BUSSY-TEMPLATE.doc"))
+        file_path = resource_path(os.path.join("Datas", "documents", "CERTIFICAT-SXX-BUSSY-TEMPLATE.dotx"))
 
         if os.path.exists(file_path):
             os.startfile(file_path)
@@ -624,7 +624,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Rev-20250909-01")
+        self.title("Rev-20250909-03")
         self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None
