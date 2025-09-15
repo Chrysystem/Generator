@@ -755,7 +755,7 @@ class Application(tk.Tk):
         # Onglet 5: Settings
         ttk.Label(tab5, text="Configuration", style="TLabel").pack(pady=20)
         ttk.Button(tab5, width=50, text="Configurer la base de données par défaut", command=self.configure_default_excel).pack(pady=10)
-        ttk.Button(tab5, width=50, text="Sélectionner template chevalet", command=self.select_chevalet_template).pack(pady=10)
+        #ttk.Button(tab5, width=50, text="Sélectionner template chevalet", command=self.select_chevalet_template).pack(pady=10)
         #ttk.Button(tab5, width=50, text="Sélectionner fichier Excel pour publipostage", command=self.select_excel_for_mailmerge).pack(pady=10)
         #fonction de filtrage sans institution TMHFR (debug) 
         # ttk.Button(tab5, width=50, text="Générer Excel sans institution TMHFR", command=self.generate_filtered_mailmerge_without_tmhf).pack(pady=10)
