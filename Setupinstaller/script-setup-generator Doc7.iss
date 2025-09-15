@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Generator_DocForm"
-#define MyAppVersion "1.8.5"
+#define MyAppVersion "1.8.6"
 #define MyAppPublisher "Chrysystem"
 #define MyAppExeName "Generator_Formation.exe"
 #define MyAppAssocName MyAppName + " File"
@@ -34,7 +34,7 @@ InfoBeforeFile=C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokum
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 ;PrivilegesRequired=lowest
 OutputDir=C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\OutpuSetup
-OutputBaseFilename=SetupGenerator-1.8.5
+OutputBaseFilename=SetupGenerator-1.8.6
 SetupIconFile=C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\install_Icon.ico
 SolidCompression=yes
 WizardStyle=modern
@@ -49,8 +49,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Datas\*"; DestDir: "{app}\Datas"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\dist\LogoTMH.png"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\dist\logo-Toyota-Solo.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\LogoTMH.png"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\logo-Toyota-Solo.ico"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]

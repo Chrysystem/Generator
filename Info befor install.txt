@@ -1,3 +1,3 @@
-Version test
-Version release du 250909-01
-Version de l'installateur 1.8.5
+Version BetaTest
+Version release du 250909-03
+Version de l'installateur 1.8.6
