@@ -8,6 +8,7 @@ import openpyxl
 import docx
 import sys
 import os
+import configparser
 import numpy
 from PIL import Image, ImageTk
 import time
@@ -87,7 +88,7 @@ def generate_chevalets_from_excel(excel_file_path):
         df = pd.read_excel(excel_file_path)
         
         # Chemin vers le template de chevalet
-        template_path = os.path.join("Datas", "documents", "template_chevalet.docx")
+        template_path = resource_path(os.path.join("Datas", "documents", "template_chevalet.docx"))
         
         # Vérifier si le template existe
         if not os.path.exists(template_path):
@@ -457,7 +458,7 @@ class Application(tk.Tk):
         """Ouvre un fichier Word avec l'application par défaut dans le dossier Datas/documents (toujours accessible)"""
         # Exécuter le filtrage TMHFR avant d'ouvrir la convention
         self.generate_filtered_mailmerge_without_tmhf()
-        file_path = resource_path(os.path.join("Datas", "documents", "CONVENTION-Sxx 2025-BUSSY.dotx"))
+        file_path = resource_path(os.path.join("Datas", "documents", "CONVENTION-Sxx 2025-Template.dotx"))
         #initial_dir = resource_path(os.path.join("Datas", "documents"))
         #file_path = filedialog.askopenfilename(
         #    filetypes=[("Word Files", "*.docx")],
@@ -465,32 +466,41 @@ class Application(tk.Tk):
         #    initialdir=initial_dir
         #)
         if os.path.exists(file_path):
-            os.startfile(file_path)
+            try:
+                os.startfile(file_path)
+            except Exception as e:
+                messagebox.showerror("Erreur", f"Impossible d'ouvrir le fichier:\n{file_path}\n\nDétail: {e}\n\nVérifiez l'association des fichiers .dotx avec Microsoft Word.")
         else:
             messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
 
     def open_certificat_file(self):
         file_path = resource_path(os.path.join("Datas", "documents", "CERTIFICAT DE REALISATION-SXX.dotx"))
-
         if os.path.exists(file_path):
-            os.startfile(file_path)
+            try:
+                os.startfile(file_path)
+            except Exception as e:
+                messagebox.showerror("Erreur", f"Impossible d'ouvrir le fichier:\n{file_path}\n\nDétail: {e}\n\nVérifiez l'association des fichiers .dotx avec Microsoft Word.")
         else:
             messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
 
 
     def open_attestation_file(self):
-        file_path = resource_path(os.path.join("Datas", "documents", "ATTESTATION-SXX-BUSSY-TEMPLATE.dotx"))
-
+        file_path = resource_path(os.path.join("Datas", "documents", "ATTESTATION-SXX-TEMPLATE.dotx"))
         if os.path.exists(file_path):
-            os.startfile(file_path)
+            try:
+                os.startfile(file_path)
+            except Exception as e:
+                messagebox.showerror("Erreur", f"Impossible d'ouvrir le fichier:\n{file_path}\n\nDétail: {e}\n\nVérifiez l'association des fichiers .dotx avec Microsoft Word.")
         else:
             messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
 
     def open_certificatri_file(self):
-        file_path = resource_path(os.path.join("Datas", "documents", "CERTIFICAT-SXX-BUSSY-TEMPLATE.dotx"))
-
+        file_path = resource_path(os.path.join("Datas", "documents", "CERTIFICAT-SXX-TEMPLATE.dotx"))
         if os.path.exists(file_path):
-            os.startfile(file_path)
+            try:
+                os.startfile(file_path)
+            except Exception as e:
+                messagebox.showerror("Erreur", f"Impossible d'ouvrir le fichier:\n{file_path}\n\nDétail: {e}\n\nVérifiez l'association des fichiers .dotx avec Microsoft Word.")
         else:
             messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
 
@@ -536,7 +546,7 @@ class Application(tk.Tk):
            
         ]
 
-        default_filename = "EMARGEMENT-SxxA-CARQUEFOU.docx"
+        default_filename = "EMARGEMENT-SxxA-Default.docx"
         chosen_filename = None
         for keyword, filename in selection_rules:
             if _normalize(keyword) in formation_text:
@@ -571,7 +581,7 @@ class Application(tk.Tk):
             return
 
         # Demander où sauvegarder le fichier
-        save_path = os.path.join("Datas", "Log", "Log_export.xlsx")
+        save_path = resource_path(os.path.join("Datas", "Log", "Log_export.xlsx"))
         #save_path = filedialog.asksaveasfilename(
         #   defaultextension=".xlsx",
         #    filetypes=[("Excel Files", "*.xlsx")],
@@ -589,13 +599,13 @@ class Application(tk.Tk):
             
             #if response:
                 # Copier le fichier vers l'emplacement standard
-            excel_dest = os.path.join("Datas", "documents", "source_publipostage.xlsx")
+            excel_dest = resource_path(os.path.join("Datas", "documents", "source_publipostage.xlsx"))
             os.makedirs(os.path.dirname(excel_dest), exist_ok=True)
             import shutil
             shutil.copy2(save_path, excel_dest)
                 
             # Créer un fichier de configuration
-            config_path = os.path.join("Datas", "documents", "mailmerge_config.txt")
+            config_path = resource_path(os.path.join("Datas", "documents", "mailmerge_config.txt"))
             colonnes = list(filtered_df.columns)
             
             with open(config_path, 'w', encoding='utf-8') as f:
@@ -624,7 +634,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Rev-20250909-03")
+        self.title("Rev-20250915-01")
         self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None
@@ -744,9 +754,9 @@ class Application(tk.Tk):
 
         # Onglet 5: Settings
         ttk.Label(tab5, text="Configuration", style="TLabel").pack(pady=20)
-        ttk.Button(tab5, width=50, text="Configurer fichier Excel par défaut", command=self.configure_default_excel).pack(pady=10)
+        ttk.Button(tab5, width=50, text="Configurer la base de données par défaut", command=self.configure_default_excel).pack(pady=10)
         ttk.Button(tab5, width=50, text="Sélectionner template chevalet", command=self.select_chevalet_template).pack(pady=10)
-        ttk.Button(tab5, width=50, text="Sélectionner fichier Excel pour publipostage", command=self.select_excel_for_mailmerge).pack(pady=10)
+        #ttk.Button(tab5, width=50, text="Sélectionner fichier Excel pour publipostage", command=self.select_excel_for_mailmerge).pack(pady=10)
         #fonction de filtrage sans institution TMHFR (debug) 
         # ttk.Button(tab5, width=50, text="Générer Excel sans institution TMHFR", command=self.generate_filtered_mailmerge_without_tmhf).pack(pady=10)
 
@@ -828,7 +838,7 @@ class Application(tk.Tk):
     def open_chevalet(self):
         """Ouvre le template Word de chevalet pour le publipostage"""
         # Chemin vers le template de chevalet
-        template_path = os.path.join("Datas", "documents", "template_chevalet.docx")
+        template_path = resource_path(os.path.join("Datas", "documents", "template_chevalet.dotx"))
         
         # Vérifier si le template existe
         if not os.path.exists(template_path):
@@ -861,7 +871,7 @@ class Application(tk.Tk):
         )
         if file_path:
             # Copier le template sélectionné vers le dossier Datas/documents
-            template_dest = os.path.join("Datas", "documents", "template_chevalet.docx")
+            template_dest = resource_path(os.path.join("Datas", "documents", "template_chevalet.docx"))
             os.makedirs(os.path.dirname(template_dest), exist_ok=True)
             
             try:
@@ -887,7 +897,7 @@ class Application(tk.Tk):
                 nb_lignes = len(df)
                 
                 # Créer un fichier de configuration pour le publipostage
-                config_path = os.path.join("Datas", "documents", "mailmerge_config.txt")
+                config_path = resource_path(os.path.join("Datas", "documents", "mailmerge_config.txt"))
                 os.makedirs(os.path.dirname(config_path), exist_ok=True)
                 
                 with open(config_path, 'w', encoding='utf-8') as f:
@@ -898,7 +908,7 @@ class Application(tk.Tk):
                         f.write(f"- {col}\n")
                 
                 # Copier le fichier Excel vers un emplacement standard
-                excel_dest = os.path.join("Datas", "documents", "source_publipostage.xlsx")
+                excel_dest = resource_path(os.path.join("Datas", "documents", "source_publipostage.xlsx"))
                 import shutil
                 shutil.copy2(file_path, excel_dest)
                 
@@ -927,7 +937,7 @@ class Application(tk.Tk):
         if file_path:
             try:
                 # Sauvegarder le chemin dans un fichier de configuration
-                config_path = os.path.join("Datas", "config", "default_excel.txt")
+                config_path = resource_path(os.path.join("Datas", "config", "default_excel.txt"))
                 os.makedirs(os.path.dirname(config_path), exist_ok=True)
                 
                 with open(config_path, 'w', encoding='utf-8') as f:
@@ -943,7 +953,7 @@ class Application(tk.Tk):
 
     def get_default_excel_path(self):
         """Récupère le chemin du fichier Excel par défaut depuis la configuration"""
-        config_path = os.path.join("Datas", "config", "default_excel.txt")
+        config_path = resource_path(os.path.join("Datas", "config", "default_excel.txt"))
         if os.path.exists(config_path):
             try:
                 with open(config_path, 'r', encoding='utf-8') as f:
@@ -1072,29 +1082,50 @@ class Application(tk.Tk):
 
 
 def resource_path(relative_path):
-    """Obtenir le chemin absolu vers une ressource, compatible dev et .exe PyInstaller"""
-    if hasattr(sys, '_MEIPASS'):
-        # Pour les exécutables PyInstaller, utiliser le répertoire de l'exécutable
-        # pour les fichiers de données qui ne sont pas embarqués
-        if relative_path.startswith("Datas"):
-            # Les fichiers de données restent dans le répertoire de l'exécutable
+    """Obtenir le chemin absolu vers une ressource, compatible dev et .exe PyInstaller,
+    avec support d'un répertoire de base configurable.
+    """
+    # Lire un base_dir optionnel depuis Datas/config/app.ini
+    base_dir_override = None
+    try:
+        # Résoudre un chemin minimal pour lire la config même avant toute création
+        if hasattr(sys, '_MEIPASS'):
             exe_dir = os.path.dirname(sys.executable)
-            full_path = os.path.join(exe_dir, relative_path)
-            
-            # Créer le dossier Datas s'il n'existe pas
-            datas_dir = os.path.join(exe_dir, "Datas")
+            config_candidate = os.path.join(exe_dir, "Datas", "config", "app.ini")
+        else:
+            config_candidate = os.path.join(os.path.abspath("."), "Datas", "config", "app.ini")
+        if os.path.exists(config_candidate):
+            parser = configparser.ConfigParser()
+            parser.read(config_candidate, encoding='utf-8')
+            base_dir_override = parser.get('paths', 'base_dir', fallback=None)
+            if base_dir_override:
+                base_dir_override = os.path.expandvars(base_dir_override)
+    except Exception:
+        base_dir_override = None
+
+    if hasattr(sys, '_MEIPASS'):
+        # Pour les exécutables PyInstaller, utiliser le répertoire ciblé
+        if relative_path.startswith("Datas"):
+            # Utiliser override si fourni, sinon dossier de l'exécutable
+            root_dir = base_dir_override if base_dir_override else os.path.dirname(sys.executable)
+            full_path = os.path.join(root_dir, relative_path)
+
+            # S'assurer que la structure Datas existe au besoin dans root_dir
+            datas_dir = os.path.join(root_dir, "Datas")
             if not os.path.exists(datas_dir):
                 os.makedirs(datas_dir, exist_ok=True)
-                # Créer aussi les sous-dossiers
                 os.makedirs(os.path.join(datas_dir, "documents"), exist_ok=True)
                 os.makedirs(os.path.join(datas_dir, "config"), exist_ok=True)
                 os.makedirs(os.path.join(datas_dir, "Log"), exist_ok=True)
-            
+
             return full_path
         else:
-            # Les autres ressources peuvent être dans _MEIPASS
             return os.path.join(sys._MEIPASS, relative_path)
-    return os.path.join(os.path.abspath("."), relative_path)
+    else:
+        # Mode développement: appliquer override si défini
+        if relative_path.startswith("Datas") and base_dir_override:
+            return os.path.join(base_dir_override, relative_path)
+        return os.path.join(os.path.abspath("."), relative_path)
 
 
 if __name__ == "__main__":
