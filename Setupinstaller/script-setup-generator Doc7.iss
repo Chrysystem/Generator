@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Generator_DocForm"
-#define MyAppVersion "1.8.8-B"
+#define MyAppVersion "1.8.9-A"
 #define MyAppPublisher "Chrysystem"
 #define MyAppExeName "Generator_Formation.exe"
 #define MyAppAssocName MyAppName + " File"
@@ -34,7 +34,7 @@ InfoBeforeFile=C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokum
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 PrivilegesRequired=admin
 OutputDir=C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\OutpuSetup
-OutputBaseFilename=SetupGenerator-1.8.8-B
+OutputBaseFilename=SetupGenerator-1.8.9-A
 SetupIconFile=C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\install_Icon.ico
 SolidCompression=yes
 WizardStyle=modern
