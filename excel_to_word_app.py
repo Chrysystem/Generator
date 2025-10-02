@@ -262,7 +262,6 @@ def export_filtered_excel(filtered_data, formation_name="", date_filter=""):
         print(f"Erreur lors de l'export Excel: {e}")
         return False
 
-
 # === Interface Tkinter ===
 class Application(tk.Tk):
 # test d'ouverture de mail 
@@ -535,7 +534,7 @@ class Application(tk.Tk):
             ("LSI-SSI", "EMARGEMENT-24hrs.dotx"),
             ("OPTIO H & VECTOR R", "EMARGEMENT-24hrs.dotx"),
             ("OSE", "EMARGEMENT-24hrs.dotx"),
-            ("RADIO SHUTTLE", "EMARGEMENT-24hrs.dotx"),
+            ("RADIO SHUTTLE", "EMARGEMENT-16hrs.dotx"),
             ("RRE H et RRE H2 ", "EMARGEMENT-24hrs.dotx"),
             ("RRE H2", "EMARGEMENT-24hrs.dotx"),
             ("TONERO 15-35 STAGE V", "EMARGEMENT-24hrs.dotx"),
@@ -634,7 +633,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Rev-20250915-02-B")
+        self.title("Rev-20251002")
         self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None
