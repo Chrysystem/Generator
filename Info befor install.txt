@@ -1,3 +1,7 @@
 Version BetaTest
-Version release du 251002
+Version release du 251002-A
 Version de l'installateur 1.8.9-A
+
+release info: 
+modification des pop-up 
+integration du fichier emargement pour 16hrs

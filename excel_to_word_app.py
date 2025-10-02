@@ -592,7 +592,8 @@ class Application(tk.Tk):
             filtered_df.to_excel(save_path, index=False)
             
             # Proposer d'utiliser ce fichier pour le publipostage
-            messagebox.askyesno("Publipostage",f"Fichier Excel exporté avec succès!\n{len(filtered_df)} lignes exportées.\n\n")
+            messagebox.showinfo("Publipostage",f"Fichier Excel exporté avec succès!\n{len(filtered_df)} lignes exportées.\n\n")
+            #messagebox.askyesno("Publipostage",f"Fichier Excel exporté avec succès!\n{len(filtered_df)} lignes exportées.\n\n")
                 #f"Voulez-vous utiliser ce fichier pour le publipostage Word?\n\n"
                 #f"Si oui, le fichier sera copié vers l'emplacement standard pour faciliter le publipostage.")
             
@@ -613,15 +614,16 @@ class Application(tk.Tk):
                 f.write(f"Colonnes disponibles:\n")
                 for col in colonnes:
                     f.write(f"- {col}\n")
-            
-            messagebox.showinfo("Publipostage configuré", 
-                f"Fichier configuré pour le publipostage!\n\n"
-                f"Fichier copié vers: {excel_dest}\n\n"
-                f"Pour utiliser dans Word:\n"
-                f"1. Ouvrir Word\n"
-                f"2. Publipostage > Sélectionner les destinataires > Utiliser une liste existante\n"
-                f"3. Sélectionner: {excel_dest}\n\n"
-                f"Colonnes disponibles: {', '.join(colonnes[:5])}{'...' if len(colonnes) > 5 else ''}")
+            # message de d'information pour l'utilisation pour le publipostage dans word
+        
+            #messagebox.showinfo("Publipostage configuré", 
+                #f"Fichier configuré pour le publipostage!\n\n"
+                #f"Fichier copié vers: {excel_dest}\n\n"
+                #f"Pour utiliser dans Word:\n"
+                #f"1. Ouvrir Word\n"
+                #f"2. Publipostage > Sélectionner les destinataires > Utiliser une liste existante\n"
+                #f"3. Sélectionner: {excel_dest}\n\n"
+                #f"Colonnes disponibles: {', '.join(colonnes[:5])}{'...' if len(colonnes) > 5 else ''}")
             #else:
             messagebox.showinfo("Succès", f"Fichier Excel exporté avec succès!\n{len(filtered_df)} lignes exportées.\n\nVous pouvez maintenant utiliser ce fichier pour le publipostage dans Word.")
             
@@ -633,7 +635,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Rev-20251002")
+        self.title("Rev-20251002-A")
         self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None
