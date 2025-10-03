@@ -570,7 +570,8 @@ class Application(tk.Tk):
 
         if os.path.exists(file_path):
             os.startfile(file_path)
-            messagebox.showinfo("Succès", f"Fichier ouvert avec succès!\n{file_path}")
+            messagebox.showinfo("Succès", "Fichier ouvert avec succès!")
+            #messagebox.showinfo("Succès", f"Fichier ouvert avec succès!\n{file_path}")
         else:
             messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
 
@@ -636,7 +637,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Rev-20251002-A")
+        self.title("Rev-20251002-B")
         self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None
