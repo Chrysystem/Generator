@@ -570,7 +570,7 @@ class Application(tk.Tk):
 
         if os.path.exists(file_path):
             os.startfile(file_path)
-            messagebox.showinfo("Succès", "Fichier ouvert avec succès!")
+            #messagebox.showinfo("Succès", "Fichier ouvert avec succès!")
             #messagebox.showinfo("Succès", f"Fichier ouvert avec succès!\n{file_path}")
         else:
             messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
@@ -617,7 +617,7 @@ class Application(tk.Tk):
                 for col in colonnes:
                     f.write(f"- {col}\n")
             # message de d'information pour l'utilisation pour le publipostage dans word
-            messagebox.showinfo("Succès", f"Fichier Excel exporté avec succès!\n{len(filtered_df)} lignes exportées.\n\nVous pouvez maintenant utiliser ce fichier pour le publipostage dans Word.")
+            # messagebox.showinfo("Succès", f"Fichier Excel exporté avec succès!\n{len(filtered_df)} lignes exportées.\n\nVous pouvez maintenant utiliser ce fichier pour le publipostage dans Word.")
             #messagebox.showinfo("Publipostage configuré", 
                 #f"Fichier configuré pour le publipostage!\n\n"
                 #f"Fichier copié vers: {excel_dest}\n\n"
@@ -637,7 +637,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Rev-20251002-B")
+        self.title("Rev-20251002-B+")
         self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None

@@ -1,7 +1,6 @@
 Version BetaTest
-Version release du 251002-B
-Version de l'installateur 1.10
+Version release du 251002-B+
+Version de l'installateur 1.10-A
 
 release info: 
-modification des pop-up 
-integration du fichier emargement pour 16hrs
+suppression des popup 
