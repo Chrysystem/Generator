@@ -1,6 +1,6 @@
 Version BetaTest
-Version release du 251002-A
-Version de l'installateur 1.8.9-A
+Version release du 251002-B
+Version de l'installateur 1.10
 
 release info: 
 modification des pop-up 
