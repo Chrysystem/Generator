@@ -637,7 +637,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Rev-20251002-B+")
+        self.title("Rev-20251002-C")
         self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None
@@ -722,7 +722,7 @@ class Application(tk.Tk):
         ttk.Label(tab1, text="Type de Formation:").pack()
         self.formation_entry = ttk.Combobox(tab1, values=[
             "AUTOPILOT", "AUTOPILOT Niveau 2", "BASES THERMIQUE MODULES 1,2 & 3",
-            "BASES TRAIGO (24V série 7 et 48R + 80V série 8)", "LEVIO STAXIO SERIE P et HC",
+            "BASES TRAIGO ", "LEVIO STAXIO SERIE P et HC",
             "LITHIUM-ION TMHMS & TMHMI", "LSI-SSI", "OPTIO H & VECTOR R", "OSE",
             "RADIO SHUTTLE", "RRE H et RRE H2 ", "RRE H2", "TONERO 15-35 STAGE V",
             "TONERO 35-80 STAGE V", "TONERO HST STAGE V", "TRAIGO 80 Série 9 20-35",
