@@ -1,6 +1,7 @@
 Version BetaTest
-Version release du 251002-B+
-Version de l'installateur 1.10-A
+Version release du 251009
+Version de l'installateur 1.11
 
 release info: 
 suppression des popup 
+correction bug TRAIGO 
