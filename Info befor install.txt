@@ -1,7 +1,6 @@
 Version BetaTest
 Version release du 251009
-Version de l'installateur 1.11
+Version de l'installateur 1.2.2
 
 release info: 
-suppression des popup 
-correction bug TRAIGO 
+Setup configuration multi template documents 
