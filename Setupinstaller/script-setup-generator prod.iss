@@ -3,7 +3,7 @@
 ; Generator pro version
 
 #define MyAppName "Generator_DocForm"
-#define MyAppVersion "1.2.2"
+#define MyAppVersion "1.2.3"
 #define MyAppPublisher "Chrysystem"
 #define MyAppExeName "Generator_Formation.exe"
 #define MyAppAssocName MyAppName + " File"
@@ -35,7 +35,7 @@ InfoBeforeFile=C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokum
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 PrivilegesRequired=admin
 OutputDir=C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\OutpuSetup
-OutputBaseFilename=SetupGenerator-1.2.2
+OutputBaseFilename=SetupGenerator-1.2.3
 SetupIconFile=C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\install_Icon.ico
 SolidCompression=yes
 WizardStyle=modern
@@ -56,6 +56,7 @@ Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00
 Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\DocumentsPC\*"; DestDir: "{app}\Datas\"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: ShouldInstallPC
 Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\DocumentsDR\*"; DestDir: "{app}\Datas\"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: ShouldInstallDR
 Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\DocumentsXX\*"; DestDir: "{app}\Datas\"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: ShouldInstallXX
+Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\DocumentsAD\*"; DestDir: "{app}\Datas\"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: ShouldInstallAD
 Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\logo-Toyota-Solo.ico"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
@@ -76,6 +77,7 @@ begin
   TemplateCombo.Left := 10;
   TemplateCombo.Top := 10;
   TemplateCombo.Width := 200;
+  TemplateCombo.Items.Add('DocumentsAD');
   TemplateCombo.Items.Add('DocumentsCD');
   TemplateCombo.Items.Add('DocumentsLB');
   TemplateCombo.Items.Add('DocumentsPC');
@@ -108,6 +110,11 @@ end;
 function ShouldInstallDR: Boolean;
 begin
   Result := SelectedTemplate = 'DocumentsDR';
+end;
+
+function ShouldInstallAD: Boolean;
+begin
+  Result := SelectedTemplate = 'DocumentsAD';
 end;
 
 function ShouldInstallXX: Boolean;

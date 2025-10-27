@@ -1,6 +1,7 @@
 Version BetaTest
 Version release du 251009
-Version de l'installateur 1.2.2
+Version de l'installateur 1.2.3
 
 release info: 
 Setup configuration multi template documents 
+add template AD
