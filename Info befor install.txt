@@ -3,5 +3,5 @@ Version release du 251103-c
 Version de l'installateur 1.3
 
 release info: 
-integration de tout les documents en format publipostage
-automatisation du nom du formateur et du lieu de formation
+integration de tout les documents dans l'app, configuration de la base de donnée pour publipostage
+automatisation du nom du formateur et du lieu de formation dans les documents
