@@ -115,7 +115,11 @@ def generate_chevalets_from_excel(excel_file_path):
                     '{{FORMATION}}': formation,
                     '{{DATE}}': str(date),
                     '{{PRENOM}}': row.get('firstname', ''),
-                    '{{NOM_FAMILLE}}': row.get('lastname', '')
+                    '{{NOM_FAMILLE}}': row.get('lastname', ''),
+                    '{{FORMATEUR}}': row.get('formateur', ''),
+                    # Remplir FMC avec le lieu pour compatibilité
+                    '{{FMC}}': row.get('lieu', row.get('facetofacename', row.get('fmc', ''))),
+                    '{{LIEU}}': row.get('lieu', row.get('facetofacename', ''))
                 })
                 
                 # Nettoyer le nom pour le nom de fichier (enlever les caractères spéciaux)
@@ -192,7 +196,7 @@ def create_default_chevalet_template(template_path):
     doc.add_heading('Informations de Formation', level=1)
     
     # Tableau pour la formation
-    formation_table = doc.add_table(rows=2, cols=2)
+    formation_table = doc.add_table(rows=4, cols=2)
     formation_table.style = 'Table Grid'
     
     # Formation
@@ -202,6 +206,14 @@ def create_default_chevalet_template(template_path):
     # Date
     formation_table.cell(1, 0).text = "Date:"
     formation_table.cell(1, 1).text = "{{DATE}}"
+
+    # Formateur
+    formation_table.cell(2, 0).text = "Formateur:"
+    formation_table.cell(2, 1).text = "{{FORMATEUR}}"
+
+    # Lieu de formation
+    formation_table.cell(3, 0).text = "Lieu de formation:"
+    formation_table.cell(3, 1).text = "{{LIEU}}"
     
     doc.add_paragraph()
     
@@ -494,12 +506,70 @@ class Application(tk.Tk):
             messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
 
     def open_certificatri_file(self):
-        file_path = resource_path(os.path.join("Datas", "documents", "CERTIFICAT-SXX-TEMPLATE.dotx"))
+        """Ouvre un fichier Word de certification selon la formation sélectionnée."""
+        # Texte saisi/choisi pour la formation (champ de filtre en haut)
+        try:
+            formation_text_raw = (self.formation_entry.get() or "")
+        except Exception:
+            formation_text_raw = ""
+
+        # Normalisation: minuscules et suppression des accents pour des comparaisons robustes
+        import unicodedata
+        def _normalize(text: str) -> str:
+            t = str(text or "").lower()
+            t = unicodedata.normalize('NFKD', t)
+            return "".join(c for c in t if not unicodedata.combining(c))
+
+        formation_text = _normalize(formation_text_raw)
+
+        # Règles par mots-clés → fichier à ouvrir
+        selection_rules = [
+            ("VECTOR A", "CERTIFICAT-VNA.dotx"),
+            ("LITHIUM-ION TMHMS & TMHMI", "CERTIFICAT-LITHIUM-ION.dotx"),
+            ("AUTOPILOT", "CERTIFICAT-AUTOPILOT.dotx"),
+            ("AUTOPILOT Niveau 2", "CERTIFICAT-AUTOPILOT N2.dotx"),
+            ("BASES THERMIQUE MODULES 1,2 & 3", "CERTIFICAT-BASES THERMIQUE 2.dotx"),
+            ("BASES TRAIGO (24V série 7 et 48R + 80V série 8)", "CERTIFICAT-BASES TRAIGO.dotx"),
+            ("LEVIO STAXIO SERIE P et HC", "CERTIFICAT-LEVIO STAXIO SERIE  P & HC.dotx"),
+            ("LITHIUM-ION TMHMS & TMHMI", "CERTIFICAT-LITHIUM-ION.dotx"),
+            ("LSI-SSI", "CERTIFICAT-LSI-SSI.dotx"),
+            ("OPTIO H & VECTOR R", "CERTIFICAT-OPTIO H_VECTOR R.dotx"),
+            ("OSE", "CERTIFICAT-OSE.dotx"),
+            ("RADIO SHUTTLE", "CERTIFICAT-RADIO SHUTTLE.dotx"),
+            ("RRE H et RRE H2 ", "CERTIFICAT-RRE H & RRE H2.dotx"),
+            ("RRE H2", "CERTIFICAT-RRE H2.dotx"),
+            ("TONERO 15-35 STAGE V", "CERTIFICAT-TONERO 15-35 STAGE V.dotx"),
+            ("TONERO 35-80 STAGE V", "CERTIFICAT-TONERO 35-80 STAGE V.dotx"),
+            ("TONERO HST STAGE V", "CERTIFICAT-TONERO HST STAGE V.dotx"),
+            ("TRAIGO 80 Série 9 20-35", "CERTIFICAT-TRAIGO 80 SERIE 9 20-35.dotx"),
+            ("TRAIGO 80 Série 9 60-80", "CERTIFICAT-TRAIGO 80 SERIE 9 60-80.dotx"),
+        ]
+
+        default_filename = "EMARGEMENT-SxxA-Default.docx"
+        chosen_filename = None
+        for keyword, filename in selection_rules:
+            if _normalize(keyword) in formation_text:
+                chosen_filename = filename
+                break
+        if not chosen_filename:
+            chosen_filename = default_filename
+
+        file_path = resource_path(os.path.join("Datas", "documents", chosen_filename))
+
+        # Fallback sur le fichier par défaut si le choisi n'existe pas
+        if not os.path.exists(file_path) and chosen_filename != default_filename:
+            fallback_path = resource_path(os.path.join("Datas", "documents", default_filename))
+            if os.path.exists(fallback_path):
+                file_path = fallback_path
+            else:
+                messagebox.showerror(
+                    "Erreur",
+                    f"Fichier introuvable:\n{file_path}\n\nVérifiez la présence de:\n- {chosen_filename}\n- {default_filename}"
+                )
+                return
+
         if os.path.exists(file_path):
-            try:
-                os.startfile(file_path)
-            except Exception as e:
-                messagebox.showerror("Erreur", f"Impossible d'ouvrir le fichier:\n{file_path}\n\nDétail: {e}\n\nVérifiez l'association des fichiers .dotx avec Microsoft Word.")
+            os.startfile(file_path)
         else:
             messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
 
@@ -591,6 +661,24 @@ class Application(tk.Tk):
         
         #if save_path:
         try:
+            # Ajout des colonnes Formateur / FMC si renseignées
+            try:
+                formateur_value = (self.formateur_entry.get() or "").strip()
+            except Exception:
+                formateur_value = ""
+            if formateur_value:
+                filtered_df["formateur"] = formateur_value
+
+            # Utiliser le lieu saisi/sélectionné
+            try:
+                lieu_value = (self.lieuformation_entry.get() or "").strip()
+            except Exception:
+                lieu_value = ""
+            if lieu_value:
+                filtered_df["lieu"] = lieu_value
+                # Compatibilité: remplir aussi une colonne fmc avec le même contenu si attendue par des modèles existants
+                filtered_df["fmc"] = lieu_value
+
             filtered_df.to_excel(save_path, index=False)
             
             # Proposer d'utiliser ce fichier pour le publipostage
@@ -637,7 +725,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Rev-20251009")
+        self.title("Rev-20251103")
         self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None
@@ -735,6 +823,22 @@ class Application(tk.Tk):
         ])
 
         self.lieuformation_entry.pack()
+
+        # Champs complémentaires
+        ttk.Label(tab1, text="Nom du Formateur:").pack()
+        self.formateur_entry = ttk.Combobox(
+            tab1,
+            values=[
+                "",
+                "Christophe DESANDIEGO",
+                "Alexandre DAVID",
+                "Bruno LE BEC",
+                "Didier RENARD"
+            ],
+            state="readonly"
+        )
+        self.formateur_entry.pack()
+
         ttk.Button(tab1, width=50, text="Filtrer et Exporter Excel", command=self.filter_and_export_excel).pack(pady=10)
 
         # Onglet 2: Actions documents
@@ -976,6 +1080,7 @@ class Application(tk.Tk):
             self.file_path = self.get_default_excel_path()
             if os.path.exists(self.file_path):
                 self.df = pd.read_excel(self.file_path)
+                # Liste des formateurs fixe (pas de remplissage automatique)
                 # Afficher les informations sur les colonnes de filtrage
                 info_text = f"Fichier chargé avec succès!\n\nFichier: {os.path.basename(self.file_path)}\n"
                 
@@ -1083,6 +1188,8 @@ class Application(tk.Tk):
 
         messagebox.showinfo("Succès", "Documents Word générés avec succès!")
 
+
+    # liste fixe de formateurs gérée directement dans la Combobox
 
 def resource_path(relative_path):
     """Obtenir le chemin absolu vers une ressource, compatible dev et .exe PyInstaller,
