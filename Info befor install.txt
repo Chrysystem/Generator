@@ -1,8 +1,7 @@
 Version BetaTest
-Version release du 251009
-Version de l'installateur 1.2.6
+Version release du 251103-c
+Version de l'installateur 1.3
 
 release info: 
-Setup configuration multi template documents 
-Modification du template CERTIFICATION TEMPLATE
-correction du nom de formation dans le certificat 
+integration de tout les documents en format publipostage
+automatisation du nom du formateur et du lieu de formation

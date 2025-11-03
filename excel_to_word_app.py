@@ -496,14 +496,81 @@ class Application(tk.Tk):
 
 
     def open_attestation_file(self):
-        file_path = resource_path(os.path.join("Datas", "documents", "ATTESTATION-SXX-TEMPLATE.dotx"))
+        """Ouvre un fichier Word d'attestation selon la formation sélectionnée."""
+    
+        #file_path = resource_path(os.path.join("Datas", "documents", "ATTESTATION-SXX-TEMPLATE.dotx"))
+        #if os.path.exists(file_path):
+        #    try:
+        #        os.startfile(file_path)
+        #    except Exception as e:
+        #        messagebox.showerror("Erreur", f"Impossible d'ouvrir le fichier:\n{file_path}\n\nDétail: {e}\n\nVérifiez l'association des fichiers .dotx avec Microsoft Word.")
+        #else:
+        #    messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
+        try:
+            formation_text_raw = (self.formation_entry.get() or "")
+        except Exception:
+            formation_text_raw = ""
+
+        # Normalisation: minuscules et suppression des accents pour des comparaisons robustes
+        import unicodedata
+        def _normalize(text: str) -> str:
+            t = str(text or "").lower()
+            t = unicodedata.normalize('NFKD', t)
+            return "".join(c for c in t if not unicodedata.combining(c))
+
+        formation_text = _normalize(formation_text_raw)
+
+        # Règles par mots-clés → fichier à ouvrir
+        selection_rules = [
+            ("VECTOR A", "ATTESTATION-VNA.dotx"),
+            ("LITHIUM-ION TMHMS & TMHMI", "ATTESTATION-LITHIUM-ION.dotx"),
+            ("AUTOPILOT", "ATTESTATION-AUTOPILOT.dotx"),
+            ("AUTOPILOT Niveau 2", "ATTESTATION-AUTOPILOT N2.dotx"),
+            ("BASES THERMIQUE MODULES 1,2 & 3", "ATTESTATION-BASES THERMIQUE 2.dotx"),
+            ("BASES TRAIGO", "ATTESTATION-BASES TRAIGO.dotx"),
+            ("LEVIO STAXIO SERIE P et HC", "ATTESTATION-LEVIO STAXIO SERIE  P & HC.dotx"),
+            ("LITHIUM-ION TMHMS & TMHMI", "ATTESTATION-LITHIUM-ION.dotx"),
+            ("LSI-SSI", "ATTESTATION-LSI-SSI.dotx"),
+            ("OPTIO H & VECTOR R", "ATTESTATION-OPTIO H_VECTOR R.dotx"),
+            ("OSE", "ATTESTATION-OSE.dotx"),
+            ("RADIO SHUTTLE", "ATTESTATION-RADIO SHUTTLE.dotx"),
+            ("RRE H et RRE H2 ", "ATTESTATION-RRE H & RRE H2.dotx"),
+            ("RRE H2", "ATTESTATION-RRE H2.dotx"),
+            ("TONERO 15-35 STAGE V", "ATTESTATION-TONERO 15-35 STAGE V.dotx"),
+            ("TONERO 35-80 STAGE V", "ATTESTATION-TONERO 35-80 STAGE V.dotx"),
+            ("TONERO HST STAGE V", "ATTESTATION-TONERO HST STAGE V.dotx"),
+            ("TRAIGO 80 Série 9 20-35", "ATTESTATION-TRAIGO 80 SERIE 9 20-35.dotx"),
+            ("TRAIGO 80 Série 9 60-80", "ATTESTATION-TRAIGO 80 SERIE 9 60-80.dotx"),
+        ]
+
+        default_filename = "ATTESTATION-TEMPLATE.dotx"
+        chosen_filename = None
+        for keyword, filename in selection_rules:
+            if _normalize(keyword) in formation_text:
+                chosen_filename = filename
+                break
+        if not chosen_filename:
+            chosen_filename = default_filename
+
+        file_path = resource_path(os.path.join("Datas", "documents", chosen_filename))
+
+        # Fallback sur le fichier par défaut si le choisi n'existe pas
+        if not os.path.exists(file_path) and chosen_filename != default_filename:
+            fallback_path = resource_path(os.path.join("Datas", "documents", default_filename))
+            if os.path.exists(fallback_path):
+                file_path = fallback_path
+            else:
+                messagebox.showerror(
+                    "Erreur",
+                    f"Fichier introuvable:\n{file_path}\n\nVérifiez la présence de:\n- {chosen_filename}\n- {default_filename}"
+                )
+                return
+
         if os.path.exists(file_path):
-            try:
-                os.startfile(file_path)
-            except Exception as e:
-                messagebox.showerror("Erreur", f"Impossible d'ouvrir le fichier:\n{file_path}\n\nDétail: {e}\n\nVérifiez l'association des fichiers .dotx avec Microsoft Word.")
+            os.startfile(file_path)
         else:
             messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
+
 
     def open_certificatri_file(self):
         """Ouvre un fichier Word de certification selon la formation sélectionnée."""
@@ -529,7 +596,7 @@ class Application(tk.Tk):
             ("AUTOPILOT", "CERTIFICAT-AUTOPILOT.dotx"),
             ("AUTOPILOT Niveau 2", "CERTIFICAT-AUTOPILOT N2.dotx"),
             ("BASES THERMIQUE MODULES 1,2 & 3", "CERTIFICAT-BASES THERMIQUE 2.dotx"),
-            ("BASES TRAIGO (24V série 7 et 48R + 80V série 8)", "CERTIFICAT-BASES TRAIGO.dotx"),
+            ("BASES TRAIGO", "CERTIFICAT-BASES TRAIGO.dotx"),
             ("LEVIO STAXIO SERIE P et HC", "CERTIFICAT-LEVIO STAXIO SERIE  P & HC.dotx"),
             ("LITHIUM-ION TMHMS & TMHMI", "CERTIFICAT-LITHIUM-ION.dotx"),
             ("LSI-SSI", "CERTIFICAT-LSI-SSI.dotx"),
@@ -545,7 +612,7 @@ class Application(tk.Tk):
             ("TRAIGO 80 Série 9 60-80", "CERTIFICAT-TRAIGO 80 SERIE 9 60-80.dotx"),
         ]
 
-        default_filename = "EMARGEMENT-SxxA-Default.docx"
+        default_filename = "CERTIFICAT-TEMPLATE.dotx"
         chosen_filename = None
         for keyword, filename in selection_rules:
             if _normalize(keyword) in formation_text:
@@ -598,7 +665,7 @@ class Application(tk.Tk):
             ("AUTOPILOT", "EMARGEMENT-32hrs.dotx"),
             ("AUTOPILOT Niveau 2", "EMARGEMENT-24hrs.dotx"),
             ("BASES THERMIQUE MODULES 1,2 & 3", "EMARGEMENT-24hrs.dotx"),
-            ("BASES TRAIGO (24V série 7 et 48R + 80V série 8)", "EMARGEMENT-24hrs.dotx"),
+            ("BASES TRAIGO", "EMARGEMENT-24hrs.dotx"),
             ("LEVIO STAXIO SERIE P et HC", "EMARGEMENT-24hrs.dotx"),
             ("LITHIUM-ION TMHMS & TMHMI", "EMARGEMENT-12hrs.dotx"),
             ("LSI-SSI", "EMARGEMENT-24hrs.dotx"),
@@ -675,9 +742,11 @@ class Application(tk.Tk):
             except Exception:
                 lieu_value = ""
             if lieu_value:
-                filtered_df["lieu"] = lieu_value
+                # Transformer BUSSY en BUSSY ST GEORGES pour le fichier Excel
+                display_lieu = "BUSSY ST GEORGES" if lieu_value.upper() == "BUSSY" else lieu_value
+                filtered_df["lieu"] = display_lieu
                 # Compatibilité: remplir aussi une colonne fmc avec le même contenu si attendue par des modèles existants
-                filtered_df["fmc"] = lieu_value
+                filtered_df["fmc"] = display_lieu
 
             filtered_df.to_excel(save_path, index=False)
             
@@ -725,7 +794,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Rev-20251103")
+        self.title("Rev-20251103-c")
         self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None
@@ -829,11 +898,12 @@ class Application(tk.Tk):
         self.formateur_entry = ttk.Combobox(
             tab1,
             values=[
-                "",
-                "Christophe DESANDIEGO",
                 "Alexandre DAVID",
                 "Bruno LE BEC",
-                "Didier RENARD"
+                "Didier RENARD",
+                "Pierre COLLIN",
+                "Christophe DESANDIEGO",
+                "______________"
             ],
             state="readonly"
         )

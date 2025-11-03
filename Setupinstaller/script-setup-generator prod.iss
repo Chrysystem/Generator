@@ -3,7 +3,7 @@
 ; Generator pro version
 
 #define MyAppName "Generator_DocForm"
-#define MyAppVersion "1.2.6"
+#define MyAppVersion "1.2.9"
 #define MyAppPublisher "Chrysystem"
 #define MyAppExeName "Generator_Formation.exe"
 #define MyAppAssocName MyAppName + " File"
@@ -35,7 +35,7 @@ InfoBeforeFile=C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokum
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 PrivilegesRequired=admin
 OutputDir=C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\OutpuSetup
-OutputBaseFilename=SetupGenerator-1.2.6
+OutputBaseFilename=SetupGenerator-1.2.9
 SetupIconFile=C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\install_Icon.ico
 SolidCompression=yes
 WizardStyle=modern
@@ -51,76 +51,76 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Datas\*"; DestDir: "{app}\Datas"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\LogoTMH.png"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\DocumentsCD\*"; DestDir: "{app}\Datas\"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: ShouldInstallCD
-Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\DocumentsLB\*"; DestDir: "{app}\Datas\"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: ShouldInstallLB
-Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\DocumentsPC\*"; DestDir: "{app}\Datas\"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: ShouldInstallPC
-Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\DocumentsDR\*"; DestDir: "{app}\Datas\"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: ShouldInstallDR
-Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\DocumentsXX\*"; DestDir: "{app}\Datas\"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: ShouldInstallXX
-Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\DocumentsAD\*"; DestDir: "{app}\Datas\"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: ShouldInstallAD
 Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\logo-Toyota-Solo.ico"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\DocumentsCD\*"; DestDir: "{app}\Datas\"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: ShouldInstallCD
+;Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\DocumentsLB\*"; DestDir: "{app}\Datas\"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: ShouldInstallLB
+;Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\DocumentsPC\*"; DestDir: "{app}\Datas\"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: ShouldInstallPC
+;Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\DocumentsDR\*"; DestDir: "{app}\Datas\"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: ShouldInstallDR
+;Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\DocumentsXX\*"; DestDir: "{app}\Datas\"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: ShouldInstallXX
+;Source: "C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\DocumentsAD\*"; DestDir: "{app}\Datas\"; Flags: ignoreversion recursesubdirs createallsubdirs; Check: ShouldInstallAD
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 
 
-[Code]
+; [Code]
 
-var
-  TemplatePage: TWizardPage;
-  SelectedTemplate: String;
-  TemplateCombo: TComboBox;
+// var
+  // TemplatePage: TWizardPage;
+  // SelectedTemplate: String;
+  // TemplateCombo: TComboBox;
 
-procedure InitializeWizard;
-begin
-  TemplatePage := CreateCustomPage(wpSelectDir, 'Choix du template', 'Sélectionnez un template à installer');
-  TemplateCombo := TComboBox.Create(TemplatePage.Surface);
-  TemplateCombo.Parent := TemplatePage.Surface;
-  TemplateCombo.Left := 10;
-  TemplateCombo.Top := 10;
-  TemplateCombo.Width := 200;
-  TemplateCombo.Items.Add('DocumentsAD');
-  TemplateCombo.Items.Add('DocumentsCD');
-  TemplateCombo.Items.Add('DocumentsLB');
-  TemplateCombo.Items.Add('DocumentsPC');
-  TemplateCombo.Items.Add('DocumentsDR');
-  TemplateCombo.Items.Add('DocumentsXX');
-  TemplateCombo.ItemIndex := 0;
-end;
+// procedure InitializeWizard;
+// begin
+  // TemplatePage := CreateCustomPage(wpSelectDir, 'Choix du template', 'Sélectionnez un template à installer');
+  // TemplateCombo := TComboBox.Create(TemplatePage.Surface);
+  // TemplateCombo.Parent := TemplatePage.Surface;
+  // TemplateCombo.Left := 10;
+  // TemplateCombo.Top := 10;
+  // TemplateCombo.Width := 200;
+  // TemplateCombo.Items.Add('DocumentsAD');
+  // TemplateCombo.Items.Add('DocumentsCD');
+  // TemplateCombo.Items.Add('DocumentsLB');
+  // TemplateCombo.Items.Add('DocumentsPC');
+  // TemplateCombo.Items.Add('DocumentsDR');
+  // TemplateCombo.Items.Add('DocumentsXX');
+  // TemplateCombo.ItemIndex := 0;
+// end;
 
-procedure CurStepChanged(CurStep: TSetupStep);
-begin
-  if CurStep = ssInstall then
-    SelectedTemplate := TemplateCombo.Items[TemplateCombo.ItemIndex];
-end;
+// procedure CurStepChanged(CurStep: TSetupStep);
+// begin
+  // if CurStep = ssInstall then
+    // SelectedTemplate := TemplateCombo.Items[TemplateCombo.ItemIndex];
+// end;
 
-function ShouldInstallCD: Boolean;
-begin
-  Result := SelectedTemplate = 'DocumentsCD';
-end;
+// function ShouldInstallCD: Boolean;
+// begin
+  // Result := SelectedTemplate = 'DocumentsCD';
+// end;
 
-function ShouldInstallLB: Boolean;
-begin
-  Result := SelectedTemplate = 'DocumentsLB';
-end;
+// function ShouldInstallLB: Boolean;
+// begin
+  // Result := SelectedTemplate = 'DocumentsLB';
+// end;
 
-function ShouldInstallPC: Boolean;
-begin
-  Result := SelectedTemplate = 'DocumentsPC';
-end;
+// function ShouldInstallPC: Boolean;
+// begin
+  // Result := SelectedTemplate = 'DocumentsPC';
+// end;
 
-function ShouldInstallDR: Boolean;
-begin
-  Result := SelectedTemplate = 'DocumentsDR';
-end;
+// function ShouldInstallDR: Boolean;
+// begin
+  // Result := SelectedTemplate = 'DocumentsDR';
+// end;
 
-function ShouldInstallAD: Boolean;
-begin
-  Result := SelectedTemplate = 'DocumentsAD';
-end;
+// function ShouldInstallAD: Boolean;
+// begin
+  // Result := SelectedTemplate = 'DocumentsAD';
+// end;
 
-function ShouldInstallXX: Boolean;
-begin
-  Result := SelectedTemplate = 'DocumentsXX';
-end;
+// function ShouldInstallXX: Boolean;
+// begin
+  // Result := SelectedTemplate = 'DocumentsXX';
+// end;
 
 [Registry]
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocExt}\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppAssocKey}"; ValueData: ""; Flags: uninsdeletevalue

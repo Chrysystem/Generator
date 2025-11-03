@@ -1,5 +1,5 @@
-Fichier Excel pour publipostage: Datas\documents\source_publipostage.xlsx
-Nombre de lignes: 3
+Fichier Excel pour publipostage: C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Datas\documents\source_publipostage.xlsx
+Nombre de lignes: 6
 Colonnes disponibles:
 - userid
 - courseid
@@ -18,3 +18,6 @@ Colonnes disponibles:
 - datedebutsession
 - datefinsession
 - duration_in_hours
+- formateur
+- lieu
+- fmc
