@@ -794,7 +794,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Rev-20251103-c")
+        self.title("Rev-20251230")
         self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None
@@ -878,11 +878,10 @@ class Application(tk.Tk):
         self.date_entry.pack()
         ttk.Label(tab1, text="Type de Formation:").pack()
         self.formation_entry = ttk.Combobox(tab1, values=[
-            "AUTOPILOT", "AUTOPILOT Niveau 2", "BASES THERMIQUE MODULES 1,2 & 3",
+            "AUTOPILOT", "AUTOPILOT Niveau 2", "TRAIGO 48 Série 9","MOTORISATIONS STAGE V",
             "BASES TRAIGO ", "LEVIO STAXIO SERIE P et HC",
             "LITHIUM-ION TMHMS & TMHMI", "LSI-SSI", "OPTIO H & VECTOR R", "OSE",
-            "RADIO SHUTTLE", "RRE H et RRE H2 ", "RRE H2", "TONERO 15-35 STAGE V",
-            "TONERO 35-80 STAGE V", "TONERO HST STAGE V", "TRAIGO 80 Série 9 20-35",
+            "RADIO SHUTTLE", "RRE H et RRE H2 ","BASES TONERO", "TONERO HST STAGE V", "TRAIGO 80 Série 9 20-35",
             "TRAIGO 80 Série 9 60-80", "VECTOR A"
         ])
         self.formation_entry.pack()
@@ -919,8 +918,8 @@ class Application(tk.Tk):
 
         # Onglet 3: Placeholder
         ttk.Label(tab3, text="Certificats et Conventions", style="TLabel").pack(pady=20)
-        ttk.Button(tab3, width=50, text="Ouvrir Certificat de Réalisation", command=self.open_certificat_file).pack(pady=10)
         ttk.Button(tab3, width=50, text="Ouvrir Convention", command=self.open_convention_file).pack(pady=10)
+        ttk.Button(tab3, width=50, text="Ouvrir Certificat de Réalisation", command=self.open_certificat_file).pack(pady=10)
         ttk.Button(tab3, width=50, text="Envoyer mail facturation", command=self.send_billing_email).pack(pady=10)
         # ttk.Button(tab3, width=50, text="Ouvrir nouveau mail", command=self.open_new_mail).pack(pady=10)
 
