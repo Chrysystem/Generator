@@ -1,0 +1,9 @@
+Bonjour a tous les Betas Testeurs!
+
+****************************************************
+*	Release Note setup 1.3 Generator_DocForm     *
+****************************************************
+
+Mise a jour avec integration des documents l'application.
+correction des documents en adéquation avec les noms de formation, formateur et lieu de la formation.
+installateur unique pour tout les formateurs. 
