@@ -541,6 +541,10 @@ class Application(tk.Tk):
             ("TONERO HST STAGE V", "ATTESTATION-TONERO HST STAGE V.dotx"),
             ("TRAIGO 80 Série 9 20-35", "ATTESTATION-TRAIGO 80 SERIE 9 20-35.dotx"),
             ("TRAIGO 80 Série 9 60-80", "ATTESTATION-TRAIGO 80 SERIE 9 60-80.dotx"),
+            ("TRAIGO 48 Série 9", "ATTESTATION-TRAIGO 48 SERIE 9.dotx"),
+            ("BASES TONERO", "ATTESTATION-BASES TONERO.dotx"),
+            ("MOTORISATIONS STAGE V", "ATTESTATION-MOTORISATIONS STAGE V.dotx"),
+            
         ]
 
         default_filename = "ATTESTATION-TEMPLATE.dotx"
@@ -610,6 +614,9 @@ class Application(tk.Tk):
             ("TONERO HST STAGE V", "CERTIFICAT-TONERO HST STAGE V.dotx"),
             ("TRAIGO 80 Série 9 20-35", "CERTIFICAT-TRAIGO 80 SERIE 9 20-35.dotx"),
             ("TRAIGO 80 Série 9 60-80", "CERTIFICAT-TRAIGO 80 SERIE 9 60-80.dotx"),
+            ("TRAIGO 48 Série 9", "CERTIFICAT-TRAIGO 48 SERIE 9.dotx"),
+            ("BASES TONERO", "CERTIFICAT-BASES TONERO.dotx"),
+            ("MOTORISATIONS STAGE V", "CERTIFICAT-MOTORISATIONS STAGE V.dotx"),
         ]
 
         default_filename = "CERTIFICAT-TEMPLATE.dotx"
@@ -679,6 +686,9 @@ class Application(tk.Tk):
             ("TONERO HST STAGE V", "EMARGEMENT-24hrs.dotx"),
             ("TRAIGO 80 Série 9 20-35", "EMARGEMENT-24hrs.dotx"),
             ("TRAIGO 80 Série 9 60-80", "EMARGEMENT-24hrs.dotx"),
+            ("BASES TONERO", "EMARGEMENT-24hrs.dotx"),
+            ("MOTORISATIONS STAGE V", "EMARGEMENT-24hrs.dotx"),
+            ("TRAIGO 48 Série 9", "EMARGEMENT-16hrs.dotx"),
            
         ]
 
