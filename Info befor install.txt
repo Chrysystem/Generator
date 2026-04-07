@@ -1,17 +1,7 @@
 Version BetaTest
-Version release du 251230
-Version de l'installateur 1.3.5
+Version release du 260407
+Version de l'installateur 1.3.7
 
 release info: 
-Mise a jour de la base de donnée suppréssion des formations 
-BASE THERMIQUE
-RREH2
-TONERO 15-35 STAGE V
-TONERO 35-80 STAGE V
-
-Ajout des formations :
-TRAIGO 48 SERIE 9
-BASE TONERO
-MOTORISATIONS STAGE V
-
-les conventions affichent uniquement les concessionnaires même chose pour les certifats de réalisation
+mise a jour fichier emargement autopilot N2
+debug de selection de fichier

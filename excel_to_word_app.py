@@ -518,39 +518,40 @@ class Application(tk.Tk):
             t = unicodedata.normalize('NFKD', t)
             return "".join(c for c in t if not unicodedata.combining(c))
 
-        formation_text = _normalize(formation_text_raw)
+        formation_text =formation_text_raw
 
         # Règles par mots-clés → fichier à ouvrir
         selection_rules = [
-            ("VECTOR A", "ATTESTATION-VNA.dotx"),
-            ("LITHIUM-ION TMHMS & TMHMI", "ATTESTATION-LITHIUM-ION.dotx"),
+            ("VECTOR_A", "ATTESTATION-VNA.dotx"),
+            ("LITHIUM-ION_TMHMS_&_TMHMI", "ATTESTATION-LITHIUM-ION.dotx"),
             ("AUTOPILOT", "ATTESTATION-AUTOPILOT.dotx"),
-            ("AUTOPILOT Niveau 2", "ATTESTATION-AUTOPILOT N2.dotx"),
-            ("BASES THERMIQUE MODULES 1,2 & 3", "ATTESTATION-BASES THERMIQUE 2.dotx"),
-            ("BASES TRAIGO", "ATTESTATION-BASES TRAIGO.dotx"),
-            ("LEVIO STAXIO SERIE P et HC", "ATTESTATION-LEVIO STAXIO SERIE  P & HC.dotx"),
-            ("LITHIUM-ION TMHMS & TMHMI", "ATTESTATION-LITHIUM-ION.dotx"),
+            ("AUTOPILOT_Niveau_2", "ATTESTATION-AUTOPILOT N2.dotx"),
+            ("BASES_THERMIQUE_MODULES_1,2_&_3", "ATTESTATION-BASES THERMIQUE 2.dotx"),
+            ("BASES_TRAIGO", "ATTESTATION-BASES TRAIGO.dotx"),
+            ("LEVIO_STAXIO_SERIE_P_et_HC", "ATTESTATION-LEVIO STAXIO SERIE  P & HC.dotx"),
+            ("LITHIUM-ION_TMHMS_&_TMHMI", "ATTESTATION-LITHIUM-ION.dotx"),
             ("LSI-SSI", "ATTESTATION-LSI-SSI.dotx"),
-            ("OPTIO H & VECTOR R", "ATTESTATION-OPTIO H_VECTOR R.dotx"),
+            ("OPTIO_H_&_VECTOR_R", "ATTESTATION-OPTIO H_VECTOR R.dotx"),
             ("OSE", "ATTESTATION-OSE.dotx"),
-            ("RADIO SHUTTLE", "ATTESTATION-RADIO SHUTTLE.dotx"),
-            ("RRE H et RRE H2 ", "ATTESTATION-RRE H & RRE H2.dotx"),
-            ("RRE H2", "ATTESTATION-RRE H2.dotx"),
-            ("TONERO 15-35 STAGE V", "ATTESTATION-TONERO 15-35 STAGE V.dotx"),
-            ("TONERO 35-80 STAGE V", "ATTESTATION-TONERO 35-80 STAGE V.dotx"),
-            ("TONERO HST STAGE V", "ATTESTATION-TONERO HST STAGE V.dotx"),
-            ("TRAIGO 80 Série 9 20-35", "ATTESTATION-TRAIGO 80 SERIE 9 20-35.dotx"),
-            ("TRAIGO 80 Série 9 60-80", "ATTESTATION-TRAIGO 80 SERIE 9 60-80.dotx"),
-            ("TRAIGO 48 Série 9", "ATTESTATION-TRAIGO 48 SERIE 9.dotx"),
-            ("BASES TONERO", "ATTESTATION-BASES TONERO.dotx"),
-            ("MOTORISATIONS STAGE V", "ATTESTATION-MOTORISATIONS STAGE V.dotx"),
+            ("RADIO_SHUTTLE", "ATTESTATION-RADIO SHUTTLE.dotx"),
+            ("RRE_H_et_RRE_H2", "ATTESTATION-RRE H & RRE H2.dotx"),
+            ("RRE_H2", "ATTESTATION-RRE H2.dotx"),
+            ("TONERO_15-35_STAGE_V", "ATTESTATION-TONERO 15-35 STAGE V.dotx"),
+            ("TONERO_35-80_STAGE_V", "ATTESTATION-TONERO 35-80 STAGE V.dotx"),
+            ("TONERO_HST_STAGE_V", "ATTESTATION-TONERO HST STAGE V.dotx"),
+            ("TRAIGO_80_Série_9_20-35", "ATTESTATION-TRAIGO 80 SERIE 9 20-35.dotx"),
+            ("TRAIGO_80_Série_9_60-80", "ATTESTATION-TRAIGO 80 SERIE 9 60-80.dotx"),
+            ("TRAIGO_48_Série_9", "ATTESTATION-TRAIGO 48 SERIE 9.dotx"),
+            ("BASES_TONERO", "ATTESTATION-BASES TONERO.dotx"),
+            ("MOTORISATIONS_STAGE_V", "ATTESTATION-MOTORISATIONS STAGE V.dotx"),
             
         ]
 
         default_filename = "ATTESTATION-TEMPLATE.dotx"
         chosen_filename = None
+        mots_cles3 = formation_text.replace(" ", "_")
         for keyword, filename in selection_rules:
-            if _normalize(keyword) in formation_text:
+            if keyword == mots_cles3:
                 chosen_filename = filename
                 break
         if not chosen_filename:
@@ -591,38 +592,39 @@ class Application(tk.Tk):
             t = unicodedata.normalize('NFKD', t)
             return "".join(c for c in t if not unicodedata.combining(c))
 
-        formation_text = _normalize(formation_text_raw)
+        formation_text = formation_text_raw
 
         # Règles par mots-clés → fichier à ouvrir
         selection_rules = [
-            ("VECTOR A", "CERTIFICAT-VNA.dotx"),
-            ("LITHIUM-ION TMHMS & TMHMI", "CERTIFICAT-LITHIUM-ION.dotx"),
+            ("VECTOR_A", "CERTIFICAT-VNA.dotx"),
+            ("LITHIUM-ION_TMHMS_&_TMHMI", "CERTIFICAT-LITHIUM-ION.dotx"),
             ("AUTOPILOT", "CERTIFICAT-AUTOPILOT.dotx"),
-            ("AUTOPILOT Niveau 2", "CERTIFICAT-AUTOPILOT N2.dotx"),
-            ("BASES THERMIQUE MODULES 1,2 & 3", "CERTIFICAT-BASES THERMIQUE 2.dotx"),
-            ("BASES TRAIGO", "CERTIFICAT-BASES TRAIGO.dotx"),
-            ("LEVIO STAXIO SERIE P et HC", "CERTIFICAT-LEVIO STAXIO SERIE  P & HC.dotx"),
-            ("LITHIUM-ION TMHMS & TMHMI", "CERTIFICAT-LITHIUM-ION.dotx"),
+            ("AUTOPILOT_Niveau_2", "CERTIFICAT-AUTOPILOT N2.dotx"),
+            ("BASES_THERMIQUE_MODULES_1,2_&_3", "CERTIFICAT-BASES THERMIQUE 2.dotx"),
+            ("BASES_TRAIGO", "CERTIFICAT-BASES TRAIGO.dotx"),
+            ("LEVIO_STAXIO_SERIE_P_et_HC", "CERTIFICAT-LEVIO STAXIO SERIE  P & HC.dotx"),
+            ("LITHIUM-ION_TMHMS_&_TMHMI", "CERTIFICAT-LITHIUM-ION.dotx"),
             ("LSI-SSI", "CERTIFICAT-LSI-SSI.dotx"),
-            ("OPTIO H & VECTOR R", "CERTIFICAT-OPTIO H_VECTOR R.dotx"),
+            ("OPTIO_H_&_VECTOR_R", "CERTIFICAT-OPTIO H_VECTOR R.dotx"),
             ("OSE", "CERTIFICAT-OSE.dotx"),
-            ("RADIO SHUTTLE", "CERTIFICAT-RADIO SHUTTLE.dotx"),
-            ("RRE H et RRE H2 ", "CERTIFICAT-RRE H & RRE H2.dotx"),
+            ("RADIO_SHUTTLE", "CERTIFICAT-RADIO SHUTTLE.dotx"),
+            ("RRE_H_et_RRE_H2", "CERTIFICAT-RRE H & RRE H2.dotx"),
             ("RRE H2", "CERTIFICAT-RRE H2.dotx"),
-            ("TONERO 15-35 STAGE V", "CERTIFICAT-TONERO 15-35 STAGE V.dotx"),
-            ("TONERO 35-80 STAGE V", "CERTIFICAT-TONERO 35-80 STAGE V.dotx"),
-            ("TONERO HST STAGE V", "CERTIFICAT-TONERO HST STAGE V.dotx"),
-            ("TRAIGO 80 Série 9 20-35", "CERTIFICAT-TRAIGO 80 SERIE 9 20-35.dotx"),
-            ("TRAIGO 80 Série 9 60-80", "CERTIFICAT-TRAIGO 80 SERIE 9 60-80.dotx"),
-            ("TRAIGO 48 Série 9", "CERTIFICAT-TRAIGO 48 SERIE 9.dotx"),
-            ("BASES TONERO", "CERTIFICAT-BASES TONERO.dotx"),
-            ("MOTORISATIONS STAGE V", "CERTIFICAT-MOTORISATIONS STAGE V.dotx"),
+            ("TONERO_15-35_STAGE_V", "CERTIFICAT-TONERO 15-35 STAGE V.dotx"),
+            ("TONERO_35-80_STAGE_V", "CERTIFICAT-TONERO 35-80 STAGE V.dotx"),
+            ("TONERO_HST_STAGE_V", "CERTIFICAT-TONERO HST STAGE V.dotx"),
+            ("TRAIGO_80_Série_9_20-35", "CERTIFICAT-TRAIGO 80 SERIE 9 20-35.dotx"),
+            ("TRAIGO_80_Série_9_60-80", "CERTIFICAT-TRAIGO 80 SERIE 9 60-80.dotx"),
+            ("TRAIGO_48_Série_9", "CERTIFICAT-TRAIGO 48 SERIE 9.dotx"),
+            ("BASES_TONERO", "CERTIFICAT-BASES TONERO.dotx"),
+            ("MOTORISATIONS_STAGE_V", "CERTIFICAT-MOTORISATIONS STAGE V.dotx"),
         ]
 
         default_filename = "CERTIFICAT-TEMPLATE.dotx"
         chosen_filename = None
+        mots_cles2 = formation_text.replace(" ", "_")
         for keyword, filename in selection_rules:
-            if _normalize(keyword) in formation_text:
+            if keyword == mots_cles2:
                 chosen_filename = filename
                 break
         if not chosen_filename:
@@ -659,50 +661,63 @@ class Application(tk.Tk):
         # Normalisation: minuscules et suppression des accents pour des comparaisons robustes
         import unicodedata
         def _normalize(text: str) -> str:
-            t = str(text or "").lower()
-            t = unicodedata.normalize('NFKD', t)
-            return "".join(c for c in t if not unicodedata.combining(c))
-
+            #t = str(text or "").lower()
+            #t = unicodedata.normalize('NFKD', t)
+            #return "".join(c for c in t if not unicodedata.combining(c))
+            return text
+            
+        
         formation_text = _normalize(formation_text_raw)
-
+       
         # Règles par mots-clés → fichier à ouvrir
         selection_rules = [
-            ("VECTOR A", "EMARGEMENT-24hrs.dotx"),
-            ("LITHIUM-ION TMHMS & TMHMI", "EMARGEMENT-12hrs.dotx"),
+            ("VECTOR_A", "EMARGEMENT-24hrs.dotx"),
+            ("LITHIUM-ION_TMHMS_&_TMHMI", "EMARGEMENT-12hrs.dotx"),
             ("AUTOPILOT", "EMARGEMENT-32hrs.dotx"),
-            ("AUTOPILOT Niveau 2", "EMARGEMENT-24hrs.dotx"),
-            ("BASES THERMIQUE MODULES 1,2 & 3", "EMARGEMENT-24hrs.dotx"),
-            ("BASES TRAIGO", "EMARGEMENT-24hrs.dotx"),
-            ("LEVIO STAXIO SERIE P et HC", "EMARGEMENT-24hrs.dotx"),
+            ("AUTOPILOT_Niveau_2", "EMARGEMENT-16hrs.dotx"),
+            ("BASES_THERMIQUE_MODULES_1,2_&_3", "EMARGEMENT-24hrs.dotx"),
+            ("BASES_TRAIGO", "EMARGEMENT-24hrs.dotx"),
+            ("LEVIO_STAXIO_SERIE_P_et_HC", "EMARGEMENT-24hrs.dotx"),
             ("LITHIUM-ION TMHMS & TMHMI", "EMARGEMENT-12hrs.dotx"),
             ("LSI-SSI", "EMARGEMENT-24hrs.dotx"),
-            ("OPTIO H & VECTOR R", "EMARGEMENT-24hrs.dotx"),
+            ("OPTIO_H_&_VECTOR_R", "EMARGEMENT-24hrs.dotx"),
             ("OSE", "EMARGEMENT-24hrs.dotx"),
             ("RADIO SHUTTLE", "EMARGEMENT-16hrs.dotx"),
-            ("RRE H et RRE H2 ", "EMARGEMENT-24hrs.dotx"),
+            ("RRE_H_et_RRE_H2", "EMARGEMENT-24hrs.dotx"),
             ("RRE H2", "EMARGEMENT-24hrs.dotx"),
-            ("TONERO 15-35 STAGE V", "EMARGEMENT-24hrs.dotx"),
-            ("TONERO 35-80 STAGE V", "EMARGEMENT-24hrs.dotx"),
-            ("TONERO HST STAGE V", "EMARGEMENT-24hrs.dotx"),
+            ("TONERO_15-35_STAGE_V", "EMARGEMENT-24hrs.dotx"),
+            ("TONERO_35-80_STAGE_V", "EMARGEMENT-24hrs.dotx"),
+            ("TONERO_HST_STAGE_V", "EMARGEMENT-24hrs.dotx"),
             ("TRAIGO 80 Série 9 20-35", "EMARGEMENT-24hrs.dotx"),
-            ("TRAIGO 80 Série 9 60-80", "EMARGEMENT-24hrs.dotx"),
-            ("BASES TONERO", "EMARGEMENT-24hrs.dotx"),
-            ("MOTORISATIONS STAGE V", "EMARGEMENT-24hrs.dotx"),
-            ("TRAIGO 48 Série 9", "EMARGEMENT-16hrs.dotx"),
+            ("TRAIGO_80_Série_9_60-80", "EMARGEMENT-24hrs.dotx"),
+            ("BASES_TONERO", "EMARGEMENT-24hrs.dotx"),
+            ("MOTORISATIONS_STAGE_V", "EMARGEMENT-24hrs.dotx"),
+            ("TRAIGO_48_Série_9", "EMARGEMENT-16hrs.dotx"),
            
         ]
 
         default_filename = "EMARGEMENT-SxxA-Default.docx"
         chosen_filename = None
+        
+        mots_cles1 = formation_text.replace(" ", "_")
+        print("Mots clés 1:")
+        print(mots_cles1)
         for keyword, filename in selection_rules:
-            if _normalize(keyword) in formation_text:
+            print("Keyword:")
+            print(keyword)
+            print("Formation text:")
+            print(formation_text)
+            print("Formation entry get:")
+            print(self.formation_entry.get())
+            if keyword == mots_cles1:
                 chosen_filename = filename
                 break
         if not chosen_filename:
             chosen_filename = default_filename
-
+       
         file_path = resource_path(os.path.join("Datas", "documents", chosen_filename))
-
+        print("File path:")
+        print(file_path)
         # Fallback sur le fichier par défaut si le choisi n'existe pas
         if not os.path.exists(file_path) and chosen_filename != default_filename:
             fallback_path = resource_path(os.path.join("Datas", "documents", default_filename))
@@ -804,7 +819,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Rev-20251230")
+        self.title("Rev-20260407")
         self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None
@@ -1209,11 +1224,12 @@ class Application(tk.Tk):
             formation_filter_lower = formation_filter.lower()
             
             # Recherche par mots-clés séparés
-            mots_cles = formation_filter_lower.split()
+            mots_cles = formation_filter_lower.replace(" ", "_")
             if len(mots_cles) > 1:
                 # Si plusieurs mots-clés, chercher ceux qui contiennent TOUS les mots
                 mask = pd.Series([True] * len(filtered_df), index=filtered_df.index)
-                for mot in mots_cles:
+                #for mot in mots_cles:
+                for mot in formation_filter_lower:
                     mask = mask & filtered_df['course full name'].astype(str).str.lower().str.contains(mot, na=False)
                 filtered_df = filtered_df[mask]
                 debug_info += f"Après filtre formation '{formation_filter}' (recherche par mots-clés): {len(filtered_df)} lignes\n"
