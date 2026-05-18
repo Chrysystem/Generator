@@ -3,4 +3,4 @@ Version release du 260518
 Version de l'installateur 1.3.9
 
 release info: 
-Rafrechissement de la DB lorsque l'on clique sur le bonton "ouverture de certification de réalisation"
+Rafraichissement de la DB lorsque l'on clique sur le bonton "ouverture de certification de réalisation"
