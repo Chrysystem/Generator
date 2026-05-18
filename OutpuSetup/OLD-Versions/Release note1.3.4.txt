@@ -1,0 +1,22 @@
+Bonjour a tous les Betas Testeurs!
+
+****************************************************
+*	Release Note setup 1.3.4 Generator_DocForm     *
+****************************************************
+
+Mise a jour de la base de donnée
+
+suppréssion des formations : 
+
+BASE THERMIQUE
+RREH2
+TONERO 15-35 STAGE V
+TONERO 35-80 STAGE V
+
+Ajout des formations suivantes : 
+
+TRAIGO 48 SERIE 9
+BASE TONERO
+MOTORISATIONS STAGE V
+
+les conventions affichent uniquement les concessionnaires même chose pour les certifats de réalisation

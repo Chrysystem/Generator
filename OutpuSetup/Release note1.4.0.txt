@@ -1,0 +1,7 @@
+Bonjour a tous les Betas Testeurs!
+
+****************************************************
+*	Release Note setup 1.4.0 Generator_DocForm     *
+****************************************************
+
+Ajout du formateur Florian BARRERAS

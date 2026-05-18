@@ -820,7 +820,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Rev-20260518")
+        self.title("Rev-20260518_1.4.0")
         self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None
@@ -928,6 +928,7 @@ class Application(tk.Tk):
                 "Didier RENARD",
                 "Pierre COLLIN",
                 "Christophe DESANDIEGO",
+                "Florian BARRERAS",
                 "______________"
             ],
             state="readonly"
