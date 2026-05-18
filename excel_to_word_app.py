@@ -485,6 +485,7 @@ class Application(tk.Tk):
             messagebox.showerror("Erreur", f"Fichier introuvable:\n{file_path}")
 
     def open_certificat_file(self):
+        self.generate_filtered_mailmerge_without_tmhf()
         file_path = resource_path(os.path.join("Datas", "documents", "CERTIFICAT DE REALISATION-SXX.dotx"))
         if os.path.exists(file_path):
             try:
@@ -819,7 +820,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Rev-20260407")
+        self.title("Rev-20260518")
         self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None

@@ -1,7 +1,6 @@
 Version BetaTest
-Version release du 260407
-Version de l'installateur 1.3.7
+Version release du 260518
+Version de l'installateur 1.3.9
 
 release info: 
-mise a jour fichier emargement autopilot N2
-debug de selection de fichier
+Rafrechissement de la DB lorsque l'on clique sur le bonton "ouverture de certification de réalisation"

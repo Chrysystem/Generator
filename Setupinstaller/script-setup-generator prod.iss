@@ -3,7 +3,7 @@
 ; Generator pro version
 
 #define MyAppName "Generator_DocForm"
-#define MyAppVersion "1.3.7"
+#define MyAppVersion "1.3.9"
 #define MyAppPublisher "Chrysystem"
 #define MyAppExeName "Generator_Formation.exe"
 #define MyAppAssocName MyAppName + " File"
@@ -35,7 +35,7 @@ InfoBeforeFile=C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokum
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 PrivilegesRequired=admin
 OutputDir=C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\OutpuSetup
-OutputBaseFilename=SetupGenerator-1.3.7
+OutputBaseFilename=SetupGenerator-1.3.9
 SetupIconFile=C:\Users\frchdes\OneDrive - Toyota Material Handling Europe\Dokument\00-Documents_AE\Documents A_E\00-Dev\Generator\Setupinstaller\install_Icon.ico
 SolidCompression=yes
 WizardStyle=modern
