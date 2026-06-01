@@ -683,13 +683,13 @@ class Application(tk.Tk):
             ("LSI-SSI", "EMARGEMENT-24hrs.dotx"),
             ("OPTIO_H_&_VECTOR_R", "EMARGEMENT-24hrs.dotx"),
             ("OSE", "EMARGEMENT-24hrs.dotx"),
-            ("RADIO SHUTTLE", "EMARGEMENT-16hrs.dotx"),
+            ("RADIO_SHUTTLE", "EMARGEMENT-16hrs.dotx"),
             ("RRE_H_et_RRE_H2", "EMARGEMENT-24hrs.dotx"),
-            ("RRE H2", "EMARGEMENT-24hrs.dotx"),
+            ("RRE_H2", "EMARGEMENT-24hrs.dotx"),
             ("TONERO_15-35_STAGE_V", "EMARGEMENT-24hrs.dotx"),
             ("TONERO_35-80_STAGE_V", "EMARGEMENT-24hrs.dotx"),
             ("TONERO_HST_STAGE_V", "EMARGEMENT-24hrs.dotx"),
-            ("TRAIGO 80 Série 9 20-35", "EMARGEMENT-24hrs.dotx"),
+            ("TRAIGO_80_Série_9_20-35", "EMARGEMENT-24hrs.dotx"),
             ("TRAIGO_80_Série_9_60-80", "EMARGEMENT-24hrs.dotx"),
             ("BASES_TONERO", "EMARGEMENT-24hrs.dotx"),
             ("MOTORISATIONS_STAGE_V", "EMARGEMENT-24hrs.dotx"),
@@ -820,7 +820,7 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.iconbitmap("logo-Toyota-Solo.ico")
-        self.title("Rev-20260518_1.4.0")
+        self.title("Rev-20260602_1.4.1")
         self.minsize(700, 400)  # Augmenté la taille minimale pour accommoder l'image
 
         self.file_path = None
