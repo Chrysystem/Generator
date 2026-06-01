@@ -1,6 +1,6 @@
 Version BetaTest
 Version release du 260518
-Version de l'installateur 1.4.0
+Version de l'installateur 1.4.1
 
 release info: 
 Rafraichissement de la DB lorsque l'on clique sur le bonton "ouverture de certification de réalisation"
